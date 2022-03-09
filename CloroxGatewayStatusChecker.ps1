@@ -1,4 +1,5 @@
-#For Clorox POC.
+#For Clorox POC, git stuff added. Git added.
+
 #Can use app ID and secret.
 Login-DataGatewayServiceAccount
 
