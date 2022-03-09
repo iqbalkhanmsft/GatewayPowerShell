@@ -1,10 +1,11 @@
 #For Clorox POC, git stuff added. Git added. Try again.
 
 $AppId = "cde24cf1-620a-4d1f-82ee-44b2138e8002"
-$Secret = "zBG7Q~MYyle3PtGzDazYJ0lGqPgb0.4RNN7mS"
+$Secret = ConvertTo-SecureString "zBG7Q~MYyle3PtGzDazYJ0lGqPgb0.4RNN7mS" –asplaintext –force
+$Tenant = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
 #Can use app ID and secret.
-Connect-DataGatewayServiceAccount -ApplicationId $AppId -ClientSecret $Secret
+Login-DataGatewayServiceAccount -ApplicationId $AppId -ClientSecret $Secret -Tenant $Tenant
 
 $Primary = Get-DataGatewayCluster
 #Get-DataGatewayClusterStatus -GatewayClusterId 1da235ff-5d0f-41a4-945c-062e07ca307e
