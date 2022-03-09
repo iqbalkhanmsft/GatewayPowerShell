@@ -1,4 +1,10 @@
-#For Clorox POC, git stuff added. Git added. Try again.
+#For monitoring the status of all gateways.
+
+#Requirements: Be a gateway admin, create an app registration with tenant.read permissions.
+
+#Still to do: Fix message list. Remove test code. Test some more.
+
+#Replace app registration contents with relevant credentials.
 
 $AppId = "cde24cf1-620a-4d1f-82ee-44b2138e8002"
 $Secret = ConvertTo-SecureString "zBG7Q~MYyle3PtGzDazYJ0lGqPgb0.4RNN7mS" –asplaintext –force
@@ -31,10 +37,7 @@ ForEach ($cluster in $Primary)
                 #Need to figure out how to convert list to string in order to get error message.
                 #MemberErrorMessages = $member.MemberGatewayErrorMessages
 
-
-
             }
-
 
         }
     }
