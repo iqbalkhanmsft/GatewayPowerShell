@@ -13,6 +13,8 @@ $Tenant = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 #Can use app ID and secret.
 Login-DataGatewayServiceAccount -ApplicationId $AppId -ClientSecret $Secret -Tenant $Tenant
 
+Login-DataGatewayServiceAccount
+
 $Primary = Get-DataGatewayCluster
 #Get-DataGatewayClusterStatus -GatewayClusterId 1da235ff-5d0f-41a4-945c-062e07ca307e
 
@@ -44,9 +46,12 @@ ForEach ($cluster in $Primary)
 
 $Dir = "C:\Temp\GatewayStatusExport.csv"
 
+$Members
+
 #$Members | Where-Object {$Members.MemberStatus -like 'None'}
 
 #Change to Live if wanting to show gateways that are active.
-$Members | Where-Object {$Members.MemberStatus -like 'None'} | Export-Csv $Dir -NoTypeInformation -Encoding utf8
+#$Members | Where-Object {$Members.MemberStatus -like 'None'} | Export-Csv $Dir -NoTypeInformation -Encoding utf8
+$Members | Export-Csv $Dir -NoTypeInformation -Encoding utf8
 
 #Disconnect-DataGatewayServiceAccount
