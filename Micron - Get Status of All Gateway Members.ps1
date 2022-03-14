@@ -14,7 +14,7 @@ $Dir = "C:\Temp\Micron - Gateway Member Status Output.csv"
 
 #Specific cluster ID for which member statuses will be returned.
 #Can leave as-is if using the alternative script further below which returns the status of gateway members for ALL clusters in the tenant.
-$ClusterId = "860118ae-edee-4fbb-8697-579c89115c31"
+$ClusterId = "1da235ff-5d0f-41a4-945c-062e07ca307e"
 
 ####### BEGIN SCRIPT #######
 
