@@ -8,6 +8,7 @@
 #Remaining: 
 #Identify primary, change gateway type labeling, change member state labeling.
 #Scheduling script via Task Scheduler.
+#General testing and validation.
 
 ####### PARAMETERS START #######
 
@@ -48,15 +49,14 @@
 Connect-DataGatewayServiceAccount -ApplicationId $AppId -ClientSecret $Secret -TenantId $TenantId
 
 #Returns the member statuses for ALL clusters in the organization.
+#Renames primary columns for clarity.
 $Members = Get-DataGatewayCluster -Scope Organization | Select @{name="PrimaryId";expression={$_.Id}}, @{name="PrimaryName";expression={$_.Name}}, @{name="GatewayDescription";expression={$_.Description}}, @{name="GatewayType";expression={$_.Type}} -ExpandProperty MemberGateways
 
 #Returns gateway member information for the specified cluster.
 #Commented out in place of the tenant-wide option above.
 #$Members = Get-DataGatewayCluster -GatewayClusterId $ClusterId | Select -ExpandProperty MemberGateways
 
-#Only selects the relevant data for the output.
-#Change if any additional information is desired.
-
+#Only selects the relevant data for the output; renames member columnns for clarity.
 $Output = $Members | Select @{name="MemberId";expression={$_.Id}}, @{name="MemberName";expression={$_.Name}}, @{name="MemberState";expression={$_.State}}, @{name="MemberVersion";expression={$_.Version}}, PrimaryId, PrimaryName, GatewayDescription, GatewayType
 
 #Only stores gateway members that are offline.
