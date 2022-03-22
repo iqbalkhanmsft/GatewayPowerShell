@@ -1,9 +1,9 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #Last updated: 3/22/2022.
 
-#This script imports multiple files from a local RDL folder to a Power BI workspace.
-#Before running, change the following parameters at the bottom of the script: $groupId, $datasetsFilenames.
-#A pop-up window will open requesting the user to log into a Power BI admin account.
+#This script imports multiple files from a local RDL folder to a premium-capacity backed Power BI workspace.
+#Before running, change the following parameters towards the end of the script: $groupId, $datasetsFilenames.
+#Once the script is run, a pop-up window will open requesting the user to log in using a Power BI admin account.
 #If authenticated correctly, the script will run.
 
 #The script will list out each file that was successfully uploaded.
@@ -11,6 +11,7 @@
 #Please see the attached link for potential reasons why a file could not be uploaded to the workspace:
 #https://docs.microsoft.com/en-us/power-bi/paginated-reports/paginated-reports-faq#what-paginated-report-features-in-ssrs-aren-t-yet-supported-in-power-bi-
 
+#Function to publish RDL file; do not change.
 function Publish-ImportRDLFile 
 {
     param
@@ -54,11 +55,14 @@ $fileBody
 Connect-PowerBIServiceAccount
 
 #Premium capacity workspace where .RDL files will be uploaded.
+#Parameter needs to be changed based on workspace to be written to.
 $groupId = "59ef6793-2fe1-49ba-9603-fe3391c6dea6"
 
 #Parent folder where files are currently stored.
+#Parameter needs to be changed based on where files are stored locally.
 $datasetsFilenames = Get-ChildItem "C:\Paginated Report Samples\"
 
+#Loop to run through all files in the folder, loading each to the Power BI premium workspace.
 foreach ($item in $datasetsFilenames) {
     try {
         Publish-ImportRDLFile -GroupId $groupId -RdlFilePath $item
