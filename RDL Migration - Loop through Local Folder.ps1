@@ -1,4 +1,5 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
+#Last updated: 3/22/2022.
 
 #This script imports multiple files from a local RDL folder to a Power BI workspace.
 #Before running, change the following parameters at the bottom of the script: $groupId, $datasetsFilenames.
