@@ -1,18 +1,18 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0#properties
+#DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/directoryaudit-list?view=graph-rest-1.0&tabs=http
 
-#DESCRIPTION:
-#Authenticates to Azure AD using token generated via app registration credentials.
-
-#REQUIREMENTS:
-#Make sure to add User.Read.All permissions in Azure AD for the relevant app registration.
+#DESCRIPTION: Authenticates to Azure AD using token generated via app registration credentials.
+#Script returns all PSTN data from the maximum 90 days out through the day prior.
 
 ####### PARAMETERS START #######
 
 $clientID = "9d241b3d-fb86-41a0-a00d-9bee7b9fd855"
 $clientSecret = "Hnc7Q~fqK_E9.m9PV79__U2jA3UoWYhfTSygH"
 $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-$file = "C:\Temp\AHS - Azure AD User Export.csv" #Change based on where the file should be saved.
+$file = "C:\Temp\AHS - Licensing Logs.csv" #Change based on where the file should be saved.
+
+$DaysToExtract = (Get-date).AddDays(-1).ToString("yyyy-MM-dd")
+Write-Output $DaysToExtract
 
 ####### PARAMETERS END #######
 
@@ -73,10 +73,12 @@ $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID
 
 #Uri for relevant query to run.
 #Pulled out assignedLicenses, assignedPlans, licenseAssignmentStates, provsionedPlans for now.
-$apiUri = "https://graph.microsoft.com/v1.0/users?`$select=accountEnabled,ageGroup,city,companyName,country,createdDateTime,creationType,deletedDateTime,department,displayName,employeeHireDate,employeeId,employeeType,givenName,id,jobTitle,mail,mailNickname,officeLocation,postalCode,state,streetAddress,surname,usageLocation,userPrincipalName,userType"
+$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime gt $DaysToExtract"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
+$results | Expand-P
+
 #Save results to Csv. Change as needed.
-$results | Export-Csv $file -NoTypeInformation -Encoding utf8
+#$results | Export-Csv $file -NoTypeInformation -Encoding utf8
