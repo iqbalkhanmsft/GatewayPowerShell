@@ -1,20 +1,19 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/callrecords-callrecord-getpstncalls?view=graph-rest-1.0&tabs=http
 
-#DESCRIPTION: Authenticates to Azure AD using token generated via app registration credentials.
-#Script returns all PSTN data from the maximum 90 days out through the day prior.
+#DESCRIPTION: #Script returns all PSTN data from the maximum 90 days out through the last completed day aka yesterday.
 
-####### PARAMETERS START #######
+    ####### PARAMETERS START #######
 
-$clientID = "5f259238-f085-4f48-9bcc-0c4678dce3df"
-$clientSecret = "kE67Q~nBQpdH2U0rR95vpTKoux2b2fLhJNGGO"
-$tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-$file = "C:\Temp\BCBS - Teams PSTN Data Export.csv" #Change based on where the file should be saved.
+    $clientID = "5f259238-f085-4f48-9bcc-0c4678dce3df" #Aka app ID.
+    $clientSecret = "kE67Q~nBQpdH2U0rR95vpTKoux2b2fLhJNGGO"
+    $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
+    $file = "C:\Temp\BCBS - Teams PSTN Data Export.csv" #Change based on where the file should be saved to.
 
-$fromDate = (Get-date).AddDays(-90).ToString("yyyy-MM-dd") #Maximum # of days our the script can return data - 90 days.
-$toDate = (Get-date).AddDays(-1).ToString("yyyy-MM-dd") #Through yesterday.
+    $fromDate = (Get-date).AddDays(-90).ToString("yyyy-MM-dd") #Maximum # of days out that the script can return data - 90 days.
+    $toDate = (Get-date).AddDays(-1).ToString("yyyy-MM-dd") #Yesterday's date; the last completed date of call logs.
 
-####### PARAMETERS END #######
+    ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
@@ -72,11 +71,10 @@ function RunQueryandEnumerateResults {
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
 #Uri for relevant query to run.
-#Pulled out assignedLicenses, assignedPlans, licenseAssignmentStates, provsionedPlans for now.
 $apiUri = "https://graph.microsoft.com/v1.0/communications/callRecords/getPstnCalls(fromDateTime=$fromDate,toDateTime=$toDate)"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
-#Save results to Csv. Change as needed.
+#Save results to CSV.
 $results | Export-Csv $file -NoTypeInformation -Encoding utf8
