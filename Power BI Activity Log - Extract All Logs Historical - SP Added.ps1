@@ -8,7 +8,7 @@
     $MinDays = 2
 
     #Folder directory of where to store files.
-    $Path = "C:\Temp"
+    $Path = "C:\Temp\"
 
     #Environment parameters.
     $TenantID = '84fb42a1-8f75-4c94-9ea6-0124b5a276c5' #Tenant id.
@@ -26,6 +26,9 @@ $Credential = New-Object PSCredential $ApplicationID, $password
 #Connect to Power BI with credentials of Service Principal.
 #When using a Service Principal, TenantID must be provided.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
+
+#Get bearer token.
+$Header = Get-PowerBIAccessToken
 
 #MaxDays..MinDays, loops over as an array over every object.
 $MaxDays..$MinDays |
