@@ -1,6 +1,8 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://www.powershellgallery.com/packages/MicrosoftPowerBIMgmt
 
+#DESCRIPTION: Extracts all Power BI activity log data for last 29 days.
+
     ####### PARAMETERS START #######
 
     #Number of days for which to collect activity logs, in iterations of 1 day at a time.
