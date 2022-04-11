@@ -4,10 +4,6 @@
 #DESCRIPTION:
 #Returns all Power BI activity log data for yesterday only.
 #Specifically exports data in CSV format; whereas JSON is the default format.
-#Non-service principal version, so script requires manual authentication.
-
-#REQUIREMENTS:
-#Ensure the user authenticating is a Power BI admin.
 
     ####### PARAMETERS START #######
 

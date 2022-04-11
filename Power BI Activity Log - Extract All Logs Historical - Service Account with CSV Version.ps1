@@ -2,12 +2,8 @@
 #DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.admin/get-powerbiactivityevent?view=powerbi-ps
 
 #DESCRIPTION:
-#Returns all Power BI activity log data for 30 days prior through the day before yesterday.
+#Returns all Power BI activity log data from 30 days prior through the day before yesterday.
 #Specifically exports data in CSV format; whereas JSON is the default format.
-#Non-service principal version, so script requires manual authentication.
-
-#REQUIREMENTS:
-#Ensure the user authenticating is a Power BI admin.
 
     ####### PARAMETERS START #######
 
