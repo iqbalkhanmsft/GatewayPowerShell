@@ -19,7 +19,7 @@ foreach {
 
     $Date = (((Get-Date).Date).AddDays(-$_)) #Today's date.
     $StartDate = (Get-Date -Date ($Date) -Format yyyy-MM-ddTHH:mm:ss) #Beginning of day - yesterday.
-    $FileDate = (Get-Date -Date ($StartDate) -Format yyyy-MM-dd) #Given day in simplified format for use in file name.
+    $FileDate = (Get-Date -Date ($StartDate) -Format yyyy-MM-dd) #Given day in simplified format for use in filename.
     $EndDate = (Get-Date -Date ((($Date).AddDays(1)).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ss) #End of day - yesterday.
 
     Write-Output "Exporting data for $FileDate..."
