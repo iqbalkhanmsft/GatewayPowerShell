@@ -9,9 +9,24 @@
 #REQUIREMENTS:
 #Ensure the user authenticating is a Power BI admin.
 
+    ####### PARAMETERS START #######
+
+    #Environment parameters.
+    $TenantID = '84fb42a1-8f75-4c94-9ea6-0124b5a276c5' #Tenant id.
+    $ApplicationID = 'db2c307a-be4f-46bf-894a-f148653df596' #App id.
+    $Secret = 'ohc7Q~vBwjskuKrZTBEe4UBUos9fo4PKw-m3U' #Client secret.
+
+    ####### PARAMETERS END #######
+
 ####### BEGIN SCRIPT #######
 
-Connect-PowerBIServiceAccount
+#Create credential object using environment parameters.
+$Password = ConvertTo-SecureString $Secret -AsPlainText -Force
+$Credential = New-Object PSCredential $ApplicationID, $password
+
+#Connect to Power BI with credentials of Service Principal.
+#When using a Service Principal, TenantID must be provided.
+Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
 #For yesterday only, get all Power BI activity log data.
 1..1 |
