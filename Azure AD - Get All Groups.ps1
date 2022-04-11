@@ -1,17 +1,14 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/directoryaudit-list?view=graph-rest-1.0&tabs=http
+#DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0&tabs=http
 
-#DESCRIPTION: Returns all "update user" licensing logs from 2 days prior and before.
+#DESCRIPTION: Returns all Azure AD groups.
 
     ####### PARAMETERS START #######
 
     $clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
     $clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-    $file = "C:\Temp\Graph API Licensing Logs - Historical.json" #Change based on where the file should be saved.
-
-    $DaysToExtract = (Get-date).AddDays(-2).ToString("yyyy-MM-dd")
-    Write-Output $DaysToExtract
+    $file = "C:\Temp\AHS - Get Groups Export.json" #Change based on where the file should be saved to.
 
     ####### PARAMETERS END #######
 
@@ -71,12 +68,12 @@ function RunQueryandEnumerateResults {
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
 #Uri for relevant query to run.
-$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime le $DaysToExtract"
+$apiUri = "https://graph.microsoft.com/v1.0/groups?`$select=id,deletedDateTime,assignedLicenses,createdDateTime,description,displayName,members"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
 $results | ConvertTo-Json | Out-File $file
 
-#Save results to Csv. Change as needed.
+#Save results to CSV.
 #$results | Export-Csv $file -NoTypeInformation -Encoding utf8

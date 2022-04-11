@@ -6,13 +6,17 @@
 
 ####### PARAMETERS START #######
 
-$clientID = "9d241b3d-fb86-41a0-a00d-9bee7b9fd855"
-$clientSecret = "Hnc7Q~fqK_E9.m9PV79__U2jA3UoWYhfTSygH"
+$clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
+$clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
 $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-$file = "C:\Temp\AHS - Licensing Logs.csv" #Change based on where the file should be saved.
 
-$DaysToExtract = (Get-date).AddDays(-1).ToString("yyyy-MM-dd")
-Write-Output $DaysToExtract
+$dayStart = (Get-date).AddDays(-1).ToString("yyyy-MM-dd")
+
+$dayEnd = (Get-date).ToString("yyyy-MM-dd")
+
+Write-Output "Extracting data between $dayStart and $dayEnd"
+
+$file = "C:\Temp\Graph API Licensing Logs - " + $dayStart + ".json" #Change based on where the file should be saved.
 
 ####### PARAMETERS END #######
 
@@ -73,12 +77,12 @@ $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID
 
 #Uri for relevant query to run.
 #Pulled out assignedLicenses, assignedPlans, licenseAssignmentStates, provsionedPlans for now.
-$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime gt $DaysToExtract"
+$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime gt $dayStart and activityDateTime lt $dayEnd"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
-$results | Expand-P
+$results | ConvertTo-Json | Out-File $file
 
 #Save results to Csv. Change as needed.
 #$results | Export-Csv $file -NoTypeInformation -Encoding utf8
