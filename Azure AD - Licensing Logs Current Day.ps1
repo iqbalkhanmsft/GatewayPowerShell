@@ -10,9 +10,15 @@
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $file = "C:\Temp\Graph API Licensing Logs - Historical.json" #Change based on where the file should be saved.
 
-    $date = (((Get-Date).Date).AddDays(-1)) #Get yesterday's date.
-    $extractEndpoint = (Get-Date -Date (($Date).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ssZ) #Subtract one second from the start of yesterday.
-    Write-Output "Extracting data from $extractEndpoint and prior..."
+    $date = (((Get-Date).Date)) #Get yesterday's date.
+    $extractStart = (Get-Date -Date (($Date)) -Format yyyy-MM-ddTHH:mm:ssZ) #Subtract one second from the start of yesterday.
+    Write-Output "Extracting data for $extractStart..."
+
+    $fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd")
+
+    $file = "C:\Temp\Graph API Licensing Logs - " + $fileNameDate + ".json" #Change based on where the file should be saved.
+
+    Write-Output "Writing results to $file..."
 
     ####### PARAMETERS END #######
 
@@ -72,7 +78,7 @@ function RunQueryandEnumerateResults {
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
 #Uri for relevant query to run.
-$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime le $extractEndpoint"
+$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime ge $extractStart"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token

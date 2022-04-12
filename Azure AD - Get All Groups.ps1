@@ -68,12 +68,14 @@ function RunQueryandEnumerateResults {
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
 #Uri for relevant query to run.
-$apiUri = "https://graph.microsoft.com/v1.0/groups?`$select=id,deletedDateTime,assignedLicenses,createdDateTime,description,displayName,members"
+$apiUri = "https://graph.microsoft.com/v1.0/groups?`$select=id,deletedDateTime,assignedLicenses,createdDateTime,description,displayName&`$expand=members"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
-$results | ConvertTo-Json | Out-File $file
+$results | Select-Object -Property id, $results.assignedLicenses.skuId
+
+#$results #| ConvertTo-Json | Out-File $file
 
 #Save results to CSV.
 #$results | Export-Csv $file -NoTypeInformation -Encoding utf8

@@ -10,13 +10,19 @@ $clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
 $clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
 $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
-$dayStart = (Get-date).AddDays(-1).ToString("yyyy-MM-dd")
+$date = (((Get-Date).Date).AddDays(-1)) #Get yesterday's date.
+$dayStart = (Get-Date -Date ($Date) -Format yyyy-MM-ddTHH:mm:ssZ) #Format with milliseconds - beginning of yesterday.
 
-$dayEnd = (Get-date).ToString("yyyy-MM-dd")
+$today = (((Get-Date).Date)) #Get today's date.
+$dayEnd = (Get-Date -Date ((($Today)).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ssZ) #Minus one millisecond - end of yesterday.
 
-Write-Output "Extracting data between $dayStart and $dayEnd"
+Write-Output "Extracting data between $dayStart and $dayEnd..."
 
-$file = "C:\Temp\Graph API Licensing Logs - " + $dayStart + ".json" #Change based on where the file should be saved.
+$fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd")
+
+$file = "C:\Temp\Graph API Licensing Logs - " + $fileNameDate + ".json" #Change based on where the file should be saved.
+
+Write-Output "Writing results to $file..."
 
 ####### PARAMETERS END #######
 
@@ -77,7 +83,7 @@ $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID
 
 #Uri for relevant query to run.
 #Pulled out assignedLicenses, assignedPlans, licenseAssignmentStates, provsionedPlans for now.
-$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime gt $dayStart and activityDateTime lt $dayEnd"
+$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime ge $dayStart and activityDateTime le $dayEnd"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
