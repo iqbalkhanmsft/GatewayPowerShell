@@ -8,17 +8,15 @@
     $clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
     $clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-    $file = "C:\Temp\Graph API Licensing Logs - Historical.json" #Change based on where the file should be saved.
+    $file = "C:\Temp\" #Change based on where the file should be saved.
 
-    $date = (((Get-Date).Date)) #Get yesterday's date.
-    $extractStart = (Get-Date -Date (($Date)) -Format yyyy-MM-ddTHH:mm:ssZ) #Subtract one second from the start of yesterday.
+    $date = (((Get-Date).Date)) #Get today's date.
+    $extractStart = (Get-Date -Date (($Date)) -Format yyyy-MM-ddTHH:mm:ssZ) #Format today's date with milliseconds.
     Write-Output "Extracting data for $extractStart..."
+    $fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd") #Format today's date for file name.
+    $fileName = $file + "Graph API Licensing Logs - " + $fileNameDate + ".json" #Change based on where the file should be saved.
 
-    $fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd")
-
-    $file = "C:\Temp\Graph API Licensing Logs - " + $fileNameDate + ".json" #Change based on where the file should be saved.
-
-    Write-Output "Writing results to $file..."
+    Write-Output "Writing results to $fileName..."
 
     ####### PARAMETERS END #######
 
@@ -77,9 +75,9 @@ function RunQueryandEnumerateResults {
 #Execute GetGraphToken function using relevant parameters.
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
-#Uri for relevant query to run.
+#Uri for relevant query to run. Updated for more accurate filtering to license update logs.
 #$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime ge $extractStart"
-$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$activityDateTime ge $extractStart"
+$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDateTime ge $extractStart"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
@@ -104,17 +102,21 @@ foreach($changedObject in $licenseChange)
 {
     #Create custom object.
     $object = New-Object PSObject
-    $object | Add-Member -MemberType NoteProperty -Name ActivityDate ''
+    $object | Add-Member -MemberType NoteProperty -Name Category ''
+    $object | Add-Member -MemberType NoteProperty -Name ActivityDisplayName ''
+    $object | Add-Member -MemberType NoteProperty -Name OperationType ''
+    $object | Add-Member -MemberType NoteProperty -Name ActivityDateTime ''
     $object | Add-Member -MemberType NoteProperty -Name ActivityResult ''
     $object | Add-Member -MemberType NoteProperty -Name TargetUser ''
     $object | Add-Member -MemberType NoteProperty -Name InitiatedBy ''
     $object | Add-Member -MemberType NoteProperty -Name OldLicenseSKU ''
     $object | Add-Member -MemberType NoteProperty -Name NewLicenseSKU ''
 
-    #Activity date.
-    $object.ActivityDate = $changedObject.activityDateTime
-
-    #Activity result.
+    #1:1 assignments.
+    $object.Category = $changedObject.category
+    $object.ActivityDisplayName = $changedObject.activityDisplayName
+    $object.OperationType = $changedObject.operationType
+    $object.ActivityDateTime = $changedObject.activityDateTime
     $object.ActivityResult = $changedObject.result
 
     #Target user.
@@ -125,14 +127,13 @@ foreach($changedObject in $licenseChange)
 
     #Store modified license data for use below.
     $modifiedData = ($changedObject | select -ExpandProperty targetResources).modifiedProperties #Store modified properties.
-
     $assignedLicense  = $ModifiedData | where{$_.displayname -like 'AssignedLicense'} #Only keep license-related modified properties.
 
     #Identify old SKUs.
     [string]$OSKU = @()
     if($assignedLicense.oldValue -eq '[]') #If oldValue is null, then no old SKU.
-        {$Object.OldLicenseSKU = "Null"}
-    Else
+        {$Object.OldLicenseSKU -eq $Null}
+    else
         {
             $OSKUNames = $assignedLicense.oldvalue.Split('["[,[]]"')  | where{$_ -like '*Skuname*'}
             if(($OSKUNames | Measure-Object).Count -ge "1"){$OSKUNames | ForEach-Object{$OSKU += $_; $OSKU += ";"}}
@@ -143,10 +144,9 @@ foreach($changedObject in $licenseChange)
     #Identify new SKUs.
     [string]$NSKU = @()
     if($assignedLicense.newValue -eq '[]') #If newValue is null, then no new SKU.
+        {$Object.NewLicenseSKU -eq $Null}
+    else
         {
-            $Object.NewLicenseSKU = "Null"
-        }
-    Else{
             $NSKUNames = $assignedLicense.newvalue.Split('["[,[]]"')  | where{$_ -like '*Skuname*'}
             if(($NSKUNames | Measure-Object).Count -ge "1"){$NSKUNames | ForEach-Object{$NSKU += $_; $NSKU += ";"}}
             else{$Object.NewLicenseSKU = $NSKUNames  -replace ('SkuName=')}
@@ -157,4 +157,4 @@ foreach($changedObject in $licenseChange)
 
 }
 
-$auditReport | ConvertTo-Json | Out-File $file
+$auditReport #| ConvertTo-Json | Out-File $fileName
