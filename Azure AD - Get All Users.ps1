@@ -9,14 +9,17 @@
 
     ####### PARAMETERS START #######
 
-    $clientID = "9d241b3d-fb86-41a0-a00d-9bee7b9fd855" #Aka app ID.
-    $clientSecret = "Hnc7Q~fqK_E9.m9PV79__U2jA3UoWYhfTSygH"
+    $clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
+    $clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-    $file = "C:\Temp\AHS - Azure AD User Export.csv" #Change based on where the file should be saved to.
+    $file = "C:\Temp\" #Change based on where the file should be saved to.
 
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
+
+#Setup file name for saving.
+$fileName = "Azure AD - Get Users Export.csv" #Change based on where the file should be saved to.
 
 #Generate Graph API token using app registration credentials.
 function GetGraphToken {
