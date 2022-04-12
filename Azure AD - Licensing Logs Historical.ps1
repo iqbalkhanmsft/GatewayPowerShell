@@ -10,16 +10,17 @@
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $file = "C:\Temp\" #Change based on where the file should be saved.
 
-    $date = (((Get-Date).Date).AddDays(-1)) #Get yesterday's date.
-    $extractEndpoint = (Get-Date -Date (($Date).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ssZ) #Subtract one second from the start of yesterday.
-    Write-Output "Extracting data from $extractEndpoint and prior..."
-    
-    $fileName = $file + "Graph API Licensing Logs - Historical.json" #Change based on where the file should be saved.
-    Write-Output "Writing results to $fileName..."
-
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
+
+#Set up filename and other date dimensions.
+$date = (((Get-Date).Date).AddDays(-1)) #Get yesterday's date.
+$extractEndpoint = (Get-Date -Date (($Date).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ssZ) #Subtract one second from the start of yesterday.
+Write-Output "Extracting data from $extractEndpoint and prior..."
+
+$fileName = $file + "Graph API Licensing Logs - Historical.csv" #Change based on where the file should be saved.
+Write-Output "Writing results to $fileName..."
 
 #Generate Graph API token using app registration credentials.
 function GetGraphToken {
@@ -74,7 +75,7 @@ function RunQueryandEnumerateResults {
 #Execute GetGraphToken function using relevant parameters.
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
-#Uri for relevant query to run.
+#Uri for relevant query to run. Updated query for more accurate pull of licensing updates.
 #$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime le $extractEndpoint"
 $apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDateTime le $extractEndpoint"
 
@@ -156,4 +157,6 @@ foreach($changedObject in $licenseChange)
 
 }
 
-$auditReport #| ConvertTo-Json | Out-File $fileName
+$auditReport | Export-Csv $fileName
+
+#$auditReport | ConvertTo-Json | Out-File $fileName

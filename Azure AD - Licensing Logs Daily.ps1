@@ -10,22 +10,21 @@ $clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
 $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 $file = "C:\Temp\" #Change based on where the file should be saved.
 
+####### PARAMETERS END #######
+
+####### BEGIN SCRIPT #######
+
+#Setup date dimension for filtering.
 $date = (((Get-Date).Date).AddDays(-1)) #Get yesterday's date.
 $dayStart = (Get-Date -Date ($Date) -Format yyyy-MM-ddTHH:mm:ssZ) #Format with milliseconds - beginning of yesterday.
 $today = (((Get-Date).Date)) #Get today's date.
 $dayEnd = (Get-Date -Date ((($Today)).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ssZ) #Minus one millisecond - end of yesterday.
-
 Write-Output "Extracting data between $dayStart and $dayEnd..."
 
-$fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd")
-
-$fileName = $file + "Graph API Licensing Logs - " + $fileNameDate + ".json" #Change based on where the file should be saved.
-
+#Setup file name for saving.
+$fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd") #Format yesterday's date for filename.
+$fileName = $file + "Graph API Licensing Logs - " + $fileNameDate + ".csv" #Appends folder directory with filename.
 Write-Output "Writing results to $fileName..."
-
-####### PARAMETERS END #######
-
-####### BEGIN SCRIPT #######
 
 #Generate Graph API token using app registration credentials.
 function GetGraphToken {
@@ -80,8 +79,7 @@ function RunQueryandEnumerateResults {
 #Execute GetGraphToken function using relevant parameters.
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
-#Uri for relevant query to run.
-#Pulled out assignedLicenses, assignedPlans, licenseAssignmentStates, provsionedPlans for now.
+#Uri for relevant query to run. Updated query for more accurate pull of licensing updates.
 #$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime ge $dayStart and activityDateTime le $dayEnd"
 $apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDateTime ge $dayStart and activityDateTime le $dayEnd"
 
@@ -161,4 +159,6 @@ foreach($changedObject in $licenseChange)
 
 }
 
-$auditReport | ConvertTo-Json | Out-File $fileName
+$auditReport | Export-Csv $fileName
+
+#$auditReport | ConvertTo-Json | Out-File $fileName
