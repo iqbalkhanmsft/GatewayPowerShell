@@ -1,8 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/directoryaudit-list?view=graph-rest-1.0&tabs=http
 
-#DESCRIPTION: Returns all "update user" licensing logs from 2 days prior and before.
-
+#DESCRIPTION: Returns all "update user" licensing logs for the current day.
     ####### PARAMETERS START #######
 
     $clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
