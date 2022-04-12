@@ -13,7 +13,7 @@
     $extractStart = (Get-Date -Date (($Date)) -Format yyyy-MM-ddTHH:mm:ssZ) #Format today's date with milliseconds.
     Write-Output "Extracting data for $extractStart..."
     $fileNameDate = (Get-date -Date ($date)).ToString("yyyy-MM-dd") #Format today's date for file name.
-    $fileName = $file + "Graph API Licensing Logs - " + $fileNameDate + ".json" #Change based on where the file should be saved.
+    $fileName = $file + "Graph API Licensing Logs - " + $fileNameDate + ".csv" #Change based on where the file should be saved.
 
     Write-Output "Writing results to $fileName..."
 
@@ -156,4 +156,6 @@ foreach($changedObject in $licenseChange)
 
 }
 
-$auditReport #| ConvertTo-Json | Out-File $fileName
+$auditReport | Export-Csv $fileName
+
+#$auditReport | ConvertTo-Json | Out-File $fileName
