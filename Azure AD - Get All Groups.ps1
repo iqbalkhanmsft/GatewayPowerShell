@@ -16,6 +16,7 @@
 
 #Setup file name for saving.
 $fileName = $file + "Azure AD - Get Groups Export.csv"
+Write-Output "Writing results to $fileName..."
 
 #Generate Graph API token using app registration credentials.
 function GetGraphToken {

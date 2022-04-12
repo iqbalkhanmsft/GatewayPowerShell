@@ -19,7 +19,8 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$fileName = "Azure AD - Get Users Export.csv" #Change based on where the file should be saved to.
+$fileName = $file + "Azure AD - Get Users Export.csv" #Change based on where the file should be saved to.
+Write-Output "Writing results to $fileName..."
 
 #Generate Graph API token using app registration credentials.
 function GetGraphToken {
@@ -82,4 +83,4 @@ $apiUri = "https://graph.microsoft.com/v1.0/users?`$select=accountEnabled,ageGro
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
 #Save results to Csv. Change as needed.
-$results | Export-Csv $file -NoTypeInformation -Encoding utf8
+$results | Export-Csv $fileName -NoTypeInformation -Encoding utf8
