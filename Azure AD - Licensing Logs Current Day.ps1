@@ -78,12 +78,83 @@ function RunQueryandEnumerateResults {
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
 #Uri for relevant query to run.
-$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime ge $extractStart"
+#$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$filter=activityDisplayName eq `'Update user`' and activityDateTime ge $extractStart"
+$apiUri = "https://graph.microsoft.com/beta/auditLogs/directoryAudits?`$activityDateTime ge $extractStart"
 
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
-$results | ConvertTo-Json | Out-File $file
+#Create object to store relevant logs to.
+$licenseChange = @()
 
-#Save results to Csv. Change as needed.
-#$results | Export-Csv $file -NoTypeInformation -Encoding utf8
+#For each log, store data in object if display name is like AssignedLicense.
+foreach($item in $results)
+{
+    if ($item | select -ExpandProperty targetresources | select -ExpandProperty modifiedProperties | where{$_.displayName -like "AssignedLicense"})
+    {
+    $licenseChange += $item
+    }
+}
+
+#Create object to store formatted license data to.
+$auditReport = @()
+
+#For each license log, create custom object with appropriate data.
+foreach($changedObject in $licenseChange)
+{
+    #Create custom object.
+    $object = New-Object PSObject
+    $object | Add-Member -MemberType NoteProperty -Name ActivityDate ''
+    $object | Add-Member -MemberType NoteProperty -Name ActivityResult ''
+    $object | Add-Member -MemberType NoteProperty -Name TargetUser ''
+    $object | Add-Member -MemberType NoteProperty -Name InitiatedBy ''
+    $object | Add-Member -MemberType NoteProperty -Name OldLicenseSKU ''
+    $object | Add-Member -MemberType NoteProperty -Name NewLicenseSKU ''
+
+    #Activity date.
+    $object.ActivityDate = $changedObject.activityDateTime
+
+    #Activity result.
+    $object.ActivityResult = $changedObject.result
+
+    #Target user.
+    $object.TargetUser = ($changedObject | select -ExpandProperty targetResources).userPrincipalName
+
+    #Initiated by.
+    $object.InitiatedBy = ($changedObject.initiatedBy | select -ExpandProperty user).userPrincipalName
+
+    #Store modified license data for use below.
+    $modifiedData = ($changedObject | select -ExpandProperty targetResources).modifiedProperties #Store modified properties.
+
+    $assignedLicense  = $ModifiedData | where{$_.displayname -like 'AssignedLicense'} #Only keep license-related modified properties.
+
+    #Identify old SKUs.
+    [string]$OSKU = @()
+    if($assignedLicense.oldValue -eq '[]') #If oldValue is null, then no old SKU.
+        {$Object.OldLicenseSKU = "Null"}
+    Else
+        {
+            $OSKUNames = $assignedLicense.oldvalue.Split('["[,[]]"')  | where{$_ -like '*Skuname*'}
+            if(($OSKUNames | Measure-Object).Count -ge "1"){$OSKUNames | ForEach-Object{$OSKU += $_; $OSKU += ";"}}
+            else{$Object.NewLicenseSKU = $OSKUNames  -replace ('SkuName=')}
+            $Object.OldLicenseSKU = $OSKU -replace ('SkuName=')
+        }
+    
+    #Identify new SKUs.
+    [string]$NSKU = @()
+    if($assignedLicense.newValue -eq '[]') #If newValue is null, then no new SKU.
+        {
+            $Object.NewLicenseSKU = "Null"
+        }
+    Else{
+            $NSKUNames = $assignedLicense.newvalue.Split('["[,[]]"')  | where{$_ -like '*Skuname*'}
+            if(($NSKUNames | Measure-Object).Count -ge "1"){$NSKUNames | ForEach-Object{$NSKU += $_; $NSKU += ";"}}
+            else{$Object.NewLicenseSKU = $NSKUNames  -replace ('SkuName=')}
+            $Object.NewLicenseSKU = $NSKU -replace ('SkuName=')
+        }
+
+    $auditReport += $Object
+
+}
+
+$auditReport | ConvertTo-Json | Out-File $file
