@@ -1,7 +1,8 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.profile/invoke-powerbirestmethod?view=powerbi-ps
 
-#DESCRIPTION: Authenticate to the Power BI tenant using a bearer token.
+#DESCRIPTION: Authenticate to the Power BI tenant using login via service principal.
+
     ####### PARAMETERS START #######
 
     $clientID = "db2c307a-be4f-46bf-894a-f148653df596" #Aka app ID.
@@ -10,7 +11,6 @@
     $file = "C:\Temp\" #Change based on where the file should be saved.
 
     #Url for relevant query to run. Please note that some API calls require additional parameters - e.g. "admin/groups?`$top=50"
-    #"admin/capacities"
     $apiUri = "admin/capacities"
 
     ####### PARAMETERS END #######
@@ -26,11 +26,10 @@ $Password = ConvertTo-SecureString $clientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $clientID, $password
 
 #Connect to Power BI with credentials of Service Principal.
-#When using a Service Principal, TenantID must be provided.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
-#Not needed, but to show access token generated via Connect-PowerBIServiceAccount capability. 
-#$Headers = Get-PowerBIAccessToken
+#Not needed, since Connect-PowerBIServiceAccount provides authentication necessary for executing Power BI REST APIs.
+#Get-PowerBIAccessToken -AsString
 
 #Execute rest method.
 $result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get | ConvertFrom-Json | select -ExpandProperty value
