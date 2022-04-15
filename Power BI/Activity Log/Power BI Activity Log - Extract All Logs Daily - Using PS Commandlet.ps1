@@ -38,9 +38,8 @@ foreach {
     #Run query for yesterday only; convert output from JSON - then manually select via CSV to maintain column order across files.
     (Get-PowerBIActivityEvent -StartDateTime $StartDate -EndDateTime $EndDate -ResultType JsonString | ConvertFrom-Json) | 
     Select Id, RecordType, CreationTime, Operation, OrganizationId, UserType, UserKey, Workload, UserId, 
-    ClientIP, UserAgent, Activity, ItemName, WorkSpaceName, DashboardName, DatasetName, ReportName, CapacityId, CapacityName, 
-    WorkspaceId, ObjectId, DashboardId, DatasetId, ReportId, AppName, AppReportId, IsSuccess, ReportType, RequestId, ActivityId, DistributionMethod, ConsumptionMethod, DataflowName, DataflowId, DataflowType
-    | Export-Csv -NoTypeInformation -Path "C:\Temp\PBI Activity Log - $FileDate.csv" #Export to CSV using date as file name.
+    ClientIP, UserAgent, Activity, ItemName, WorkSpaceName, ReportName, WorkspaceId, ObjectId, ReportId, 
+    IsSuccess, ReportType, RequestId, ActivityId, DistributionMethod | Export-Csv -NoTypeInformation -Path "C:\Temp\PBI Activity Log - $FileDate.csv" #Export to CSV using date as file name.
 
     Write-Output "Data export for $FileDate completed. Exiting script..."
 

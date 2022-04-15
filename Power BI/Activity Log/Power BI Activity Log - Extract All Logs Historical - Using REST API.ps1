@@ -60,8 +60,8 @@ ForEach-Object {
     
     #Select data from object.
     $selectedActivities = $activities | Select-Object Id, RecordType, CreationTime, Operation, OrganizationId, UserType, UserKey, Workload, UserId, 
-    ClientIP, UserAgent, Activity, ItemName, WorkSpaceName, DashboardName, DatasetName, ReportName, CapacityId, CapacityName, 
-    WorkspaceId, ObjectId, DashboardId, DatasetId, ReportId, AppName, AppReportId, IsSuccess, ReportType, RequestId, ActivityId, DistributionMethod, ConsumptionMethod, DataflowName, DataflowId, DataflowType
+    ClientIP, UserAgent, Activity, ItemName, WorkSpaceName, ReportName, WorkspaceId, ObjectId, ReportId, 
+    IsSuccess, ReportType, RequestId, ActivityId, DistributionMethod
     
     #Create the file name for current day in context, and export the results to a .csv file.
     $fileName = "$(Get-Date -Date $Date -Format yyyyMMdd).csv"
