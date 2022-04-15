@@ -14,8 +14,8 @@
 
     #Environment parameters.
     $TenantID = '84fb42a1-8f75-4c94-9ea6-0124b5a276c5' #Tenant id.
-    $ApplicationID = 'e824a23c-ca9c-4cf7-a765-e1a65c0864e3' #App id.
-    $Secret = '74Q7Q~eXa6stbN-ZLIZAoq6fjL~ZwtBObhDnQ' #Client secret.
+    $ApplicationID = 'db2c307a-be4f-46bf-894a-f148653df596' #App id.
+    $Secret = 'ohc7Q~vBwjskuKrZTBEe4UBUos9fo4PKw-m3U' #Client secret.
 
     ####### PARAMETERS END #######
 
@@ -28,9 +28,6 @@ $Credential = New-Object PSCredential $ApplicationID, $password
 #Connect to Power BI with credentials of Service Principal.
 #When using a Service Principal, TenantID must be provided.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
-
-#Get bearer token.
-$Header = Get-PowerBIAccessToken
 
 #MaxDays..MinDays, loops over as an array over every object.
 $MaxDays..$MinDays |
