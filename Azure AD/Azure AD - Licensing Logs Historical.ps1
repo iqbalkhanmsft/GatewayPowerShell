@@ -6,7 +6,7 @@
     ####### PARAMETERS START #######
 
     $clientID = "0c5c2d4d-ffe7-43bf-9ad3-38a4e534f0a4" #Aka app ID.
-    $clientSecret = "2Fb7Q~W12hFTaF5gMngd5XIP~yrxoluXLd9xp"
+    $clientSecret = "9bq8Q~g5dL_NRfj4BShbY5UTjJjNvV3CGdTEac1S"
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $file = "C:\Temp\" #Change based on where the file should be saved.
 
