@@ -5,9 +5,9 @@
 
     ####### PARAMETERS START #######
 
-    $clientID = "db2c307a-be4f-46bf-894a-f148653df596" #Aka app ID.
-    $clientSecret = "2ff7Q~fk_pCZXmd5YgO~sZAaXr4udJvQ8B-yP"
-    $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
+    $clientID = "INSERT HERE" #Aka app ID.
+    $clientSecret = "INSERT HERE"
+    $tenantID = "INSERT HERE"
     $file = "C:\Temp\" #Change based on where the file should be saved.
 
     #Url for relevant query to run. Please note that some API calls require additional parameters - e.g. "admin/groups?`$top=50"
@@ -18,7 +18,7 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$fileName = $file + "Power BI - Use Token Example.csv"
+$fileName = $file + "Power BI - All Capacities.csv"
 Write-Output "Writing results to $fileName..."
 
 #Create credential object using environment parameters.
