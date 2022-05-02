@@ -8,7 +8,7 @@
 ####### BEGIN SCRIPT #######
 
 #Connect to Power BI as a Power BI admin.
-Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
+Connect-PowerBIServiceAccount
 
 #For the last 30 days through the day before yesterday, get all Power BI activity log data - incrementally for one day at a time.
 30..2 |
