@@ -5,17 +5,28 @@
 
     ####### PARAMETERS START #######
 
-    $clientID = "5f259238-f085-4f48-9bcc-0c4678dce3df" #Aka app ID.
-    $clientSecret = "kE67Q~nBQpdH2U0rR95vpTKoux2b2fLhJNGGO"
+    $clientID = "9e853f15-e2fd-4c0a-8d05-42ae6db840df" #Aka app ID.
+    $clientSecret = "O8z8Q~~z2gQrUbszn6pSKjAU35zeZYheq9_0haWx"
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
-    $file = "C:\Temp\BCBS - Teams PSTN Data Export.csv" #Change based on where the file should be saved to.
-
-    $fromDate = (Get-date).AddDays(-90).ToString("yyyy-MM-dd") #Maximum # of days out that the script can return data - 90 days.
-    $toDate = (Get-date).AddDays(-1).ToString("yyyy-MM-dd") #Yesterday's date; the last completed date of call logs.
+    $file = "C:\Temp\" #Change based on where the file should be saved to.
 
     ####### PARAMETERS END #######
-
+    
 ####### BEGIN SCRIPT #######
+
+$date = (((Get-Date).Date).AddDays(-1)) #Yesterday's date.
+$fileDate = (Get-Date -Date $Date -Format yyyyMMdd) #Yesterday's date in file save format.
+$fileName = $file + $fileDate + " - Teams PSTN Data Export.csv" #Complete directory of file to be exported.
+
+Write-Host "Generating file named $fileName..."
+
+$fromDate = (Get-date).AddDays(-1).ToString("yyyy-MM-dd") #Start date of extract - yesterday.
+$toDate = (Get-date).ToString("yyyy-MM-dd") #End date of extract - today, albeit inclusive.
+
+#API states that dates are inclusive and $toDate needs to be greater than $fromDate.
+#This means that yesterday AND today will be exported.
+#Later in the script, we Will filter out today's logs, and only save yesterday's logs.
+Write-Host "Exporting data from $fromDate to $toDate..."
 
 #Generate Graph API token using app registration credentials.
 function GetGraphToken {
@@ -76,5 +87,12 @@ $apiUri = "https://graph.microsoft.com/v1.0/communications/callRecords/getPstnCa
 #Execute primary function using Uri and token generated above.
 $results = RunQueryandEnumerateResults -apiUri $apiuri -token $token
 
-#Save results to CSV.
-$results | Export-Csv $file -NoTypeInformation -Encoding utf8
+#Since date filters are inclusive, only save logs from fromSave (yesterday) and not $toSave (today).
+#This will alleviate any issues with overlap and duplication.
+$fromSave = (Get-Date -Date ((($date).AddMilliseconds(0))) -Format yyyy-MM-ddTHH:mm:ss) #Yesterday's start.
+$toSave = (Get-Date -Date ((($date).AddDays(1)).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ss) #Yesterday's end.
+
+Write-Host "Only saving records from $fromSave to $toSave..."
+
+#Save results to CSV, specifically those records for the given date.
+$results | Where-Object {$_.startDateTime -ge $fromSave -and $_.startDateTime -le $toSave} | Export-Csv $fileName -NoTypeInformation -Encoding utf8
