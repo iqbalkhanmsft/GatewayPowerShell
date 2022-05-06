@@ -15,7 +15,7 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$fileName = $File + "Power BI - All Workspaces.csv"
+$fileName = $File + "Power BI - All Reports.csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
@@ -25,8 +25,12 @@ $Credential = New-Object PSCredential $ClientID, $Password
 #Connect to Power BI with credentials of Service Principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
+#Connect to Power BI using a Power BI admin account + OAuth.
+#Commented out in place of Service Principal login above.
+#Connect-PowerBIServiceAccount
+
 #Utiliize PS commandlets instead of REST API due to throttling cap on the API call for the admin groups call.
-$Result = Get-PowerBIWorkspace -Scope Organization -Filter "(name) eq 'DP DEV'"
+$Result = Get-PowerBIWorkspace -Scope Organization
 
 # Loop for each workspace ID and each underlying report, return data.
 $Reports = ForEach ($Workspace in $Result)
@@ -50,4 +54,4 @@ $Reports = ForEach ($Workspace in $Result)
     }
 
 #Format results in tabular format.
-$Reports #| Export-Csv $fileName
+$Reports | Export-Csv $fileName
