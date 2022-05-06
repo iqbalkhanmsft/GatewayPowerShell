@@ -32,7 +32,7 @@
     #Get all workspaces.
     $WorkspaceUsers = Get-PowerBIWorkspace -Scope Organization  | 
     
-    #For each workspace name and ID, get user identifier and access type; export to file.
+    #For each workspace, get each underlying user by role.
     ForEach-Object {
     $WorkspaceName = $_.Name
     $WorkspaceId = $_.Id

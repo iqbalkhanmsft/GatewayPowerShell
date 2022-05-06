@@ -1,7 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.workspaces/get-powerbiworkspace?view=powerbi-ps
 
-#DESCRIPTION: Authenticate to the Power BI tenant using login via service principal.
+#DESCRIPTION: Extract all Power BI reports per workspace.
 
     ####### PARAMETERS START #######
 
@@ -29,13 +29,13 @@ Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant 
 #Commented out in place of Service Principal login above.
 #Connect-PowerBIServiceAccount
 
-#Utiliize PS commandlets instead of REST API due to throttling cap on the API call for the admin groups call.
+#Get all workspaces in the organization.
 $Result = Get-PowerBIWorkspace -Scope Organization
 
-# Loop for each workspace ID and each underlying report, return data.
+#For each workspace ID in the previous output, loop through all underlying reports.
 $Reports = ForEach ($Workspace in $Result)
     {
-    ForEach ($Report in (Get-PowerBIReport -Scope Organization -WorkspaceId $workspace.Id))
+    ForEach ($Report in (Get-PowerBIReport -Scope Organization -WorkspaceId $Workspace.Id))
         {
         [pscustomobject]@{
             WorkspaceName = $Workspace.Name 
