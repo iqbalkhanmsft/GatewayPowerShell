@@ -11,7 +11,7 @@
     $file = "C:\Temp\" #Change based on where the file should be saved.
 
     #Url for relevant query to run. Please note that some API calls require additional parameters - e.g. "admin/groups?`$top=50"
-    $apiUri = "admin/capacities"
+    $apiUri = "groups/0be252fd-f744-4d90-b1ce-b06c0a2a5f6b/reports"
 
     ####### PARAMETERS END #######
 
