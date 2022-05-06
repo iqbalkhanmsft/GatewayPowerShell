@@ -8,21 +8,26 @@
     ####### PARAMETERS START #######
 
     #Environment parameters.
-    $TenantID = '84fb42a1-8f75-4c94-9ea6-0124b5a276c5' #Tenant id.
-    $ApplicationID = 'db2c307a-be4f-46bf-894a-f148653df596' #App id.
-    $Secret = 'ohc7Q~vBwjskuKrZTBEe4UBUos9fo4PKw-m3U' #Client secret.
+    $ClientID = "f9f34dda-95cc-4cd6-9984-ea90eff20de3" #Aka app ID.
+    $ClientSecret = "MMI8Q~6NQ8jrgNxEVsUj83R6Pfxec1DdynO8PdlH"
+    $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
+    $File = "C:\Temp\" #Change based on where the file should be saved.
 
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
 #Create credential object using environment parameters.
-$Password = ConvertTo-SecureString $Secret -AsPlainText -Force
-$Credential = New-Object PSCredential $ApplicationID, $password
+$Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
+$Credential = New-Object PSCredential $ClientID, $password
 
 #Connect to Power BI with credentials of Service Principal.
 #When using a Service Principal, TenantID must be provided.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
+
+#Connect to Power BI using a Power BI admin account + OAuth.
+#Commented out in place of Service Principal login above.
+#Connect-PowerBIServiceAccount
 
 #For yesterday only, get all Power BI activity log data.
 1..1 |
@@ -34,12 +39,16 @@ foreach {
     $EndDate = (Get-Date -Date ((($Date).AddDays(1)).AddMilliseconds(-1)) -Format yyyy-MM-ddTHH:mm:ss) #End of day - yesterday.
 
     Write-Output "Exporting data for $FileDate..."
+
+    #Setup file name for saving.
+    $FileName = $File + "PBI Activity Log - $FileDate.csv"
+    Write-Output "Writing results to $FileName..."
     
     #Run query for yesterday only; convert output from JSON - then manually select via CSV to maintain column order across files.
     (Get-PowerBIActivityEvent -StartDateTime $StartDate -EndDateTime $EndDate -ResultType JsonString | ConvertFrom-Json) | 
     Select Id, RecordType, CreationTime, Operation, OrganizationId, UserType, UserKey, Workload, UserId, 
     ClientIP, UserAgent, Activity, ItemName, WorkSpaceName, ReportName, WorkspaceId, ObjectId, ReportId, 
-    IsSuccess, ReportType, RequestId, ActivityId, DistributionMethod | Export-Csv -NoTypeInformation -Path "C:\Temp\PBI Activity Log - $FileDate.csv" #Export to CSV using date as file name.
+    IsSuccess, ReportType, RequestId, ActivityId, DistributionMethod | Export-Csv -NoTypeInformation -Path $FileName #Export to CSV using date as file name.
 
     Write-Output "Data export for $FileDate completed. Exiting script..."
 

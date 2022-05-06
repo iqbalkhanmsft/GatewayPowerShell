@@ -15,7 +15,7 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$fileName = $File + "Power BI - All Reports.csv"
+$FileName = $File + "Power BI - All Reports.csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
@@ -54,4 +54,4 @@ $Reports = ForEach ($Workspace in $Result)
     }
 
 #Format results in tabular format.
-$Reports | Export-Csv $fileName
+$Reports | Export-Csv $FileName
