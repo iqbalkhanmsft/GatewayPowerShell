@@ -1,7 +1,8 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/graph/api/reportroot-getonedriveusageaccountdetail?view=graph-rest-1.0#code-try-1
+#PS MODULES: https://www.powershellgallery.com/packages/MSAL.PS/4.2.1.3
 
-#DESCRIPTION: #Script exports the OneDrive Usage Account Detail report to file.
+#DESCRIPTION: #Script exports the "OneDrive Usage Account Detail" report to file.
 
     ####### PARAMETERS START #######
 
@@ -10,6 +11,7 @@
     $tenantID = "96751c9d-db78-47f2-adff-d5876f878839"
     $file = "C:\Temp\" #Change based on where the file should be saved to.
 
+    #Change parameter of data extration as shown here: https://docs.microsoft.com/en-us/graph/api/reportroot-getonedriveusageaccountdetail?view=graph-rest-1.0#code-try-1
     $periodValue = "D180"
 
     ####### PARAMETERS END #######
@@ -19,7 +21,7 @@
 #Create complete file name.
 $fileName = $file + "OneDrive - Usage Report.csv"
 
-#Install module as necessary.
+#Install module as necessary; comment out after installing module.
 #Install-Module MSAL.PS -Scope CurrentUser -Force
 
 #Import module.
@@ -31,5 +33,5 @@ $MsalToken = Get-MsalToken -TenantId $tenantId -ClientId $clientID -ClientSecret
 #Connect to Graph using token.
 Connect-Graph -AccessToken $MsalToken.AccessToken
 
-#Export report.
-Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/reports/getOneDriveUsageAccountDetail(period='D180')" -OutputFilePath $fileName
+#Export report to file.
+Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/reports/getOneDriveUsageAccountDetail(period='$periodValue')" -OutputFilePath $fileName
