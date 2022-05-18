@@ -25,10 +25,10 @@ Write-Output "Writing results to $FileName..."
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
-$Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
+$Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
 
 #Format results in tabular format.
 $Result | Out-File $FileName
