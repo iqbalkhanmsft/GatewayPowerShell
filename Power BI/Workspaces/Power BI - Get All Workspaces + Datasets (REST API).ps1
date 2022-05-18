@@ -30,7 +30,7 @@ $Credential = New-Object PSCredential $ClientID, $Password
 #Connect to Power BI with credentials of Service Principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
-$Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
+$Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
 
 #Format results in tabular format.
 $Result | Out-File $FileName
