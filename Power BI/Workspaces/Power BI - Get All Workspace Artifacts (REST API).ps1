@@ -1,5 +1,6 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
+#DOCUMENTATION: https://powerbi.microsoft.com/en-us/blog/avoiding-workspace-loops-by-expanding-navigation-properties-in-the-getgroupsasadmin-api/
 
 #DESCRIPTION: Extract all workspaces + all artifacts via REST API and service principal.
 
@@ -11,7 +12,8 @@
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
     #Url for relevant query to run.
-    $ApiUri = "admin/groups?`$top=5000&`$skip=$Skip&`$expand=users, reports, dashboards, datasets"
+
+    $ApiUri = "admin/groups?$top=5000&$skip=5000&$expand=users,reports,dashboards,datasets"
 
     ####### PARAMETERS END #######
 
@@ -30,7 +32,7 @@ $Credential = New-Object PSCredential $ClientID, $Password
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID -Environment USGov
 
 #Execute workspaces PS command.
-$Workspaces = Get-PowerBIWorkspace -Scope Organization
+#$Workspaces = Get-PowerBIWorkspace -Scope Organization
 
 #Total number of workspaces.
 #$TotalWorkspaces = $Workspaces.Count
@@ -63,7 +65,7 @@ $Index = 1
 if ($TotalWorkspaces -le 5000)
 {
     $Skip = 0
-    $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
+    $Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
 }
 
 elseif ($TotalWorkspaces -gt 5000)
@@ -71,7 +73,7 @@ elseif ($TotalWorkspaces -gt 5000)
     do
     {
         $Skip = 5000 * $Index
-        $Incremental = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
+        $Incremental = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
         $Result += $Incremental
         $Index++
         Write-Output "Extracting batch # $Index..."
@@ -81,3 +83,6 @@ elseif ($TotalWorkspaces -gt 5000)
 
 #Format results in tabular format.
 $Result | Out-File $FileName
+
+#$Index = 0
+#$Skip = 0

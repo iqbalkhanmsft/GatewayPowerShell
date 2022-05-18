@@ -1,0 +1,95 @@
+{
+  "@odata.context":"http://api.powerbi.com/v1.0/myorg/admin/$metadata#reports","@odata.count":15,"value":[
+    {
+      "id":"a8f3a883-d15e-47ad-9f98-e2a638f49d40","reportType":"PowerBIReport","name":"US Sales Analysis - M01L07Lab01","webUrl":"https://app.powerbi.com/groups/me/reports/a8f3a883-d15e-47ad-9f98-e2a638f49d40","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=a8f3a883-d15e-47ad-9f98-e2a638f49d40&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"92116bae-ac65-44f4-867c-b9de9bf5937f","createdDateTime":"2021-10-22T15:03:25.213Z","modifiedDateTime":"2021-11-05T19:30:23.93Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"feb7e5bb-d876-430b-b78e-73f65c1999c0","reportType":"PowerBIReport","name":"Capacity Metrics Analysis","webUrl":"https://app.powerbi.com/groups/me/reports/feb7e5bb-d876-430b-b78e-73f65c1999c0","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=feb7e5bb-d876-430b-b78e-73f65c1999c0&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"810a5523-8280-4dda-9d36-6ea693759f04","createdDateTime":"2021-12-07T16:08:46.28Z","modifiedDateTime":"2021-12-10T16:51:10.403Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"67bf8f97-b565-4cc8-88a2-5bccc3046a0b","reportType":"PowerBIReport","name":"[App] Capacity Metrics Analysis","webUrl":"https://app.powerbi.com/groups/me/apps/f0023ded-908e-4343-a3fa-3788eb2ad57c/reports/feb7e5bb-d876-430b-b78e-73f65c1999c0","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=67bf8f97-b565-4cc8-88a2-5bccc3046a0b&appId=f0023ded-908e-4343-a3fa-3788eb2ad57c&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"810a5523-8280-4dda-9d36-6ea693759f04","appId":"f0023ded-908e-4343-a3fa-3788eb2ad57c","createdDateTime":"2021-12-07T16:08:47.11Z","modifiedDateTime":"2021-12-10T16:51:10.6Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"0266dcdd-42ff-40f4-9975-8ba915da6a73","reportType":"PowerBIReport","name":"CapacityMetrics","webUrl":"https://app.powerbi.com/groups/me/reports/0266dcdd-42ff-40f4-9975-8ba915da6a73","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=0266dcdd-42ff-40f4-9975-8ba915da6a73&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"1d9805c9-9986-4bbb-a4d2-3c0f4d5ff9e2","createdDateTime":"2021-12-07T16:09:09.82Z","modifiedDateTime":"2021-12-07T16:09:09.82Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"ff8496d4-91e5-43ce-9c84-f64c311434d3","reportType":"PowerBIReport","name":"[App] CapacityMetrics","webUrl":"https://app.powerbi.com/groups/me/apps/cc29ffa5-daec-46e3-8834-29db40537bd1/reports/0266dcdd-42ff-40f4-9975-8ba915da6a73","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=ff8496d4-91e5-43ce-9c84-f64c311434d3&appId=cc29ffa5-daec-46e3-8834-29db40537bd1&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"1d9805c9-9986-4bbb-a4d2-3c0f4d5ff9e2","appId":"cc29ffa5-daec-46e3-8834-29db40537bd1","createdDateTime":"2021-12-07T16:09:10.857Z","modifiedDateTime":"2021-12-07T16:09:10.857Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"43fdce5b-7dca-41bd-9af1-eea836c00c1c","reportType":"PowerBIReport","name":"Report Usage Metrics Report","webUrl":"https://app.powerbi.com/groups/me/reports/43fdce5b-7dca-41bd-9af1-eea836c00c1c","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=43fdce5b-7dca-41bd-9af1-eea836c00c1c&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"6786f161-6d1e-4aee-9439-ae9ff6300f25","createdDateTime":"2021-12-09T14:55:53.78Z","modifiedDateTime":"2021-12-09T14:55:53.78Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"cd11b816-1ca1-4450-9dc4-c715a49c7077","reportType":"PowerBIReport","name":"Usage Metrics Report","webUrl":"https://app.powerbi.com/groups/me/reports/cd11b816-1ca1-4450-9dc4-c715a49c7077","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=cd11b816-1ca1-4450-9dc4-c715a49c7077&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"2d765b84-64b8-4431-b7eb-582985506f73","createdDateTime":"2021-12-09T14:56:22.85Z","modifiedDateTime":"2021-12-09T14:56:22.85Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"a172e049-138e-4266-a384-7df64a461a3d","reportType":"PowerBIReport","name":"US Sales Analysis","webUrl":"https://app.powerbi.com/groups/me/reports/a172e049-138e-4266-a384-7df64a461a3d","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=a172e049-138e-4266-a384-7df64a461a3d&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"8ea6f78f-54d8-4757-b902-5d94d4f917fb","createdDateTime":"2021-12-10T04:23:38.01Z","modifiedDateTime":"2022-03-11T16:25:36.65Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"409e4239-c79b-49f7-9b39-67a348c6af09","reportType":"PowerBIReport","name":"Sales Analysis","webUrl":"https://app.powerbi.com/groups/me/reports/409e4239-c79b-49f7-9b39-67a348c6af09","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=409e4239-c79b-49f7-9b39-67a348c6af09&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"462f5a76-1068-4466-a246-ecbe8a2b2560","createdDateTime":"2022-01-18T23:33:41.61Z","modifiedDateTime":"2022-04-21T18:34:53.9Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"0308033f-b61e-40a8-8b79-2469d80ae991","reportType":"PowerBIReport","name":"Sales Analysis","webUrl":"https://app.powerbi.com/groups/me/reports/0308033f-b61e-40a8-8b79-2469d80ae991","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=0308033f-b61e-40a8-8b79-2469d80ae991&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"c5a69e6d-b968-4b8e-9e40-3dffb28962d1","createdDateTime":"2022-01-18T23:57:18.407Z","modifiedDateTime":"2022-01-26T03:01:54.72Z","modifiedBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"d298d3dc-8bd2-42ab-a645-9930459005d6","reportType":"PowerBIReport","name":"Usage Metrics Report","webUrl":"https://app.powerbi.com/groups/me/reports/d298d3dc-8bd2-42ab-a645-9930459005d6","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=d298d3dc-8bd2-42ab-a645-9930459005d6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"34d021c3-14b1-46ec-ba01-b051823c6486","createdDateTime":"2022-01-28T18:29:24.973Z","modifiedDateTime":"2022-01-28T18:29:24.973Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"355f46a5-bd88-4c72-99e1-3e246821eb3e","reportType":"PowerBIReport","name":"[App] Sales Analysis","webUrl":"https://app.powerbi.com/groups/me/apps/2a8183ca-eaf2-48d1-b1aa-a86a0ff4edb0/reports/409e4239-c79b-49f7-9b39-67a348c6af09","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=355f46a5-bd88-4c72-99e1-3e246821eb3e&appId=2a8183ca-eaf2-48d1-b1aa-a86a0ff4edb0&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"462f5a76-1068-4466-a246-ecbe8a2b2560","appId":"2a8183ca-eaf2-48d1-b1aa-a86a0ff4edb0","createdDateTime":"2022-02-04T14:20:30.56Z","modifiedDateTime":"2022-02-04T14:21:45.213Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"e7babcce-2c75-46ff-9788-042cab3befef","reportType":"PowerBIReport","name":"[App] US Sales Analysis","webUrl":"https://app.powerbi.com/groups/me/apps/e2cca902-a254-458f-9e64-8d02552f2bbe/reports/a172e049-138e-4266-a384-7df64a461a3d","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=e7babcce-2c75-46ff-9788-042cab3befef&appId=e2cca902-a254-458f-9e64-8d02552f2bbe&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"8ea6f78f-54d8-4757-b902-5d94d4f917fb","appId":"e2cca902-a254-458f-9e64-8d02552f2bbe","createdDateTime":"2022-03-04T19:17:18.363Z","modifiedDateTime":"2022-03-04T19:17:18.363Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"f0050dd7-2340-4057-8073-87dea6966aaf","reportType":"PaginatedReport","name":"Paginated Report - Report Template","webUrl":"https://app.powerbi.com/groups/me/rdlreports/f0050dd7-2340-4057-8073-87dea6966aaf","embedUrl":"https://app.powerbi.com/rdlEmbed?reportId=f0050dd7-2340-4057-8073-87dea6966aaf&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","createdDateTime":"2022-04-22T14:28:18.587Z","modifiedDateTime":"2022-04-22T14:28:18.587Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    },{
+      "id":"544602ea-9bae-4a78-ac29-bd4232c57d8b","reportType":"PowerBIReport","name":"Usage Metrics Report","webUrl":"https://app.powerbi.com/groups/me/reports/544602ea-9bae-4a78-ac29-bd4232c57d8b","embedUrl":"https://app.powerbi.com/reportEmbed?reportId=544602ea-9bae-4a78-ac29-bd4232c57d8b&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUVBU1QyLUItUFJJTUFSWS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldCIsImVtYmVkRmVhdHVyZXMiOnsibW9kZXJuRW1iZWQiOnRydWUsImFuZ3VsYXJPbmx5UmVwb3J0RW1iZWQiOnRydWUsImNlcnRpZmllZFRlbGVtZXRyeUVtYmVkIjp0cnVlLCJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZSwic2tpcFpvbmVQYXRjaCI6dHJ1ZX19","datasetId":"c651d397-e2cb-426e-8847-c992e19c858e","createdDateTime":"2022-05-17T16:58:08.29Z","modifiedDateTime":"2022-05-17T16:58:08.29Z","modifiedBy":"admin@powerbidawgs.com","createdBy":"admin@powerbidawgs.com","users":[
+        
+      ],"subscriptions":[
+        
+      ]
+    }
+  ]
+}
