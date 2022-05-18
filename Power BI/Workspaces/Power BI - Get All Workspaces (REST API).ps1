@@ -10,7 +10,7 @@
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    $Top = 5000
+    $Top = 5000 #Number of workspaces to return; max = 5000.
 
     #Url for relevant query to run.
     $ApiUri = "admin/groups?`$top=$Top"
