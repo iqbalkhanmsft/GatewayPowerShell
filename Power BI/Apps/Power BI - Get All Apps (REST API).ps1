@@ -1,7 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/reports-get-reports-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
 
-#DESCRIPTION: Authenticate to the Power BI tenant using login via service principal.
+#DESCRIPTION: Extract all apps via REST API and service principal.
 
     ####### PARAMETERS START #######
 
@@ -10,15 +10,17 @@
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
+    $Top = 5000
+
     #Url for relevant query to run.
-    $ApiUri = "admin/reports"
+    $ApiUri = "admin/apps?`$top=$Top"
 
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Reports (API).json"
+$FileName = $File + "Power BI - All Apps (API).json"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.

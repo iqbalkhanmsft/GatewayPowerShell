@@ -1,7 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.profile/invoke-powerbirestmethod?view=powerbi-ps
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
 
-#DESCRIPTION: Authenticate to the Power BI tenant using login via service principal.
+#DESCRIPTION: Extract all workspaces + all artifacts via REST API and service principal.
 
     ####### PARAMETERS START #######
 
@@ -10,7 +10,7 @@
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    #Url for relevant query to run. Please note that some API calls require additional parameters - e.g. "admin/groups?`$top=50"
+    #Url for relevant query to run.
     $ApiUri = "admin/groups?`$top=5000&`$skip=$Skip&`$expand=users, reports, dashboards, datasets"
 
     ####### PARAMETERS END #######

@@ -1,7 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/datasets-get-datasets-as-admin
 
-#DESCRIPTION: Authenticate to the Power BI tenant using login via service principal.
+#DESCRIPTION: Extract all datasets via REST API and service principal.
 
     ####### PARAMETERS START #######
 
