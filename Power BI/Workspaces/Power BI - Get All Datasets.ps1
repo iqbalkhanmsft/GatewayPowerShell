@@ -1,7 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.reports/get-powerbireport?view=powerbi-ps
+#DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.data/get-powerbidataset?view=powerbi-ps
 
-#DESCRIPTION: Extract all Power BI reports in the tenant.
+#DESCRIPTION: Extract all Power BI reports per workspace.
 
     ####### PARAMETERS START #######
 
@@ -15,18 +15,18 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Reports.csv"
+$FileName = $File + "Power BI - All Datasets (PS).csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
 #Get all workspaces in the organization.
-$Result = Get-PowerBIReport -Scope Organization
+$Result = Get-PowerBIDataset -Scope Organization
 
 #Format results in tabular format.
 $Result | Export-Csv $FileName
