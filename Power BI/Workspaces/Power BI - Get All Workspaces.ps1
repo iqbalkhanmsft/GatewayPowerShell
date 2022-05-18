@@ -26,7 +26,7 @@ $Credential = New-Object PSCredential $ClientID, $Password
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
 #Get all workspaces in the organization.
-$Result = Get-PowerBIDashboard -Scope Organization
+$Result = Get-PowerBIWorkspace -Scope Organization
 
 #Format results in tabular format.
 $Result | Export-Csv $FileName
