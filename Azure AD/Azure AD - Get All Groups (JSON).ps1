@@ -3,6 +3,8 @@
 
 #DESCRIPTION: Returns all Azure AD groups.
 
+#WARNING: FILTERED AND PARSED SPECIFICALLY FOR AHS SOLUTION.
+
     ####### PARAMETERS START #######
 
     $clientID = "6d35ae38-1d3a-4170-ab18-02652735f6bd" #Aka app ID.
@@ -72,7 +74,7 @@ function RunQueryandEnumerateResults {
 $token = GetGraphToken -ClientSecret $clientSecret -ClientID $clientID -TenantID $tenantID
 
 #Uri for relevant query to run.
-$apiUri = "https://graph.microsoft.com/v1.0/groups?`$select=id,deletedDateTime,assignedLicenses,createdDateTime,description,displayName&`$expand=members"
+$apiUri = "https://graph.microsoft.com/v1.0/groups?`$filter=startswith(displayName, 'Cash') OR startswith(displayName, 'Delete')&`$select=id,deletedDateTime,createdDateTime,description,displayName&`$expand=members($`select=userPrincipalName)"
 
 #Execute primary function using Uri and token generated above.
 $output = RunQueryandEnumerateResults -apiUri $apiuri -token $token
@@ -90,11 +92,6 @@ foreach($item in $output)
     $object | Add-Member -MemberType NoteProperty -Name createdDateTime ''
     $object | Add-Member -MemberType NoteProperty -Name groupDescription ''
     $object | Add-Member -MemberType NoteProperty -Name groupDisplayName ''
-    $object | Add-Member -MemberType NoteProperty -Name assignedLicensesAll '' #Used as an intermediary.
-    $object | Add-Member -MemberType NoteProperty -Name assignedLicenses ''
-    $object | Add-Member -MemberType NoteProperty -Name memberDisplayNameAll '' #Used as an intermediary.
-    $object | Add-Member -MemberType NoteProperty -Name memberDisplayName ''
-    $object | Add-Member -MemberType NoteProperty -Name memberUPNAll '' #Used as an intermediary.
     $object | Add-Member -MemberType NoteProperty -Name memberUPN ''
 
     #Insert values into object.
@@ -103,50 +100,28 @@ foreach($item in $output)
     $object.createdDateTime = $item.createdDateTime
     $object.groupDescription = $item.description #Renamed for clarity.
     $object.groupDisplayName = $item.displayName #Renamed for clarity.
-    $object.assignedLicensesAll = ($item | select -ExpandProperty assignedLicenses).skuID #Grabs all values if multiple.
-    $object.memberDisplayNameAll = ($item | select -ExpandProperty members).displayName #Grabs all values if multiple.
-    $object.memberUPNAll = ($item | select -ExpandProperty members).userPrincipalName #Grabs all values if multiple.
-
-    #AssignedLicenses.
-    #Format multiple member display names into list.*
-    if($object.assignedLicensesAll -eq $Null) #If value is null, leave as null.
-        {$object.assignedLicenses -eq $Null}
-    if(($object.assignedLicensesAll | Measure-Object).Count -gt "1")
-        {$object.assignedLicensesAll | ForEach-Object{$object.assignedLicenses += $_; $object.assignedLicenses += ";"}} #Create list concatenated by ;.
-    if(($object.assignedLicensesAll | Measure-Object).Count -eq "1")
-        {$object.assignedLicenses = $object.assignedLicensesAll}
-
-    $object.assignedLicenses = $object.assignedLicenses.trimEnd(';') #Trim trailing semi-colons.
-
-    #MemberDisplayName.
-    #Format multiple member display names into list.*
-    if($object.memberDisplayNameAll -eq $Null) #If value is null, leave as null.
-        {$object.memberDisplayName -eq $Null}
-    if(($object.memberDisplayNameAll | Measure-Object).Count -gt "1")
-        {$object.memberDisplayNameAll | ForEach-Object{$object.memberDisplayName += $_; $object.memberDisplayName += ";"}} #Create list concatenated by ;.
-    if(($object.memberDisplayNameAll | Measure-Object).Count -eq "1")
-        {$object.memberDisplayName = $object.memberDisplayNameAll}
-
-    $object.memberDisplayName = $object.memberDisplayName.trimEnd(';') #Trim trailing semi-colons.
-
-    #MemberUPN.
-    #Format multiple member display names into list.*
-    if($object.memberUPNAll -eq $Null) #If value is null, leave as null.
-        {$object.memberUPN -eq $Null}
-    if(($object.memberUPNAll | Measure-Object).Count -gt "1")
-        {$object.memberUPNAll | ForEach-Object{$object.memberUPN += $_; $object.memberUPN += ";"}} #Create list concatenated by ;.
-    if(($object.memberUPNAll | Measure-Object).Count -eq "1")
-        {$object.memberUPN = $object.memberUPNAll}
-
-    $object.memberUPN = $object.memberUPN.trimEnd(';') #Trim trailing semi-colons.
+    $object.memberUPN = ($item | select -ExpandProperty members).userPrincipalName #Grabs all values if multiple.
 
     #Append object to array.
     $groups += $Object
 
 }
 
-#$groups | Select-Object groupId, deletedDateTime, createdDateTime, groupDescription, groupDisplayName, assignedLicenses,
-#memberDisplayName, memberUPN | ConvertTo-Json | Out-File $file
+$export = @()
 
-$groups | Select-Object groupId, deletedDateTime, createdDateTime, groupDescription, groupDisplayName, assignedLicenses,
-memberDisplayName, memberUPN | Export-Csv $fileName
+foreach ($record in $filterGroups)
+{
+    foreach ($user in $record.memberUPN.split(','))
+    {
+        $export += [PSCustomObject]@{ 
+            'groupId' = $record.groupId;
+            'deletedDateTime' = $record.deletedDateTime;
+            'createdDateTime' = $record.createdDateTime;
+            'groupDescription' = $record.groupDescription
+            'groupDisplayName' = $record.groupDisplayName  
+            'memberUPN' = $user  
+        }
+    }
+}
+
+$export #| Export-Csv $fileName
