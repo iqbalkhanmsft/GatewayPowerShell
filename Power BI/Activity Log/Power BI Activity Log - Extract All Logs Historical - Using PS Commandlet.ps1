@@ -8,8 +8,8 @@
     ####### PARAMETERS START #######
 
     #Environment parameters.
-    $ClientID = "f9f34dda-95cc-4cd6-9984-ea90eff20de3" #Aka app ID.
-    $ClientSecret = "MMI8Q~6NQ8jrgNxEVsUj83R6Pfxec1DdynO8PdlH"
+    $ClientID = "91d4c088-3bcf-46bb-89b0-9de5356c8e88" #Aka app ID.
+    $ClientSecret = "Cg78Q~.3n_Mm4RmaQdYg1LAwQYZ1btgpQpCjfbj8"
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
