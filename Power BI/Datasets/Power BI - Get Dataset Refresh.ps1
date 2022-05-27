@@ -29,3 +29,6 @@ $resultsValue | Format-Table
 
 #Run if any issues.
 #Resolve-PowerBIError -Last
+
+255b7025-f232-480d-b1ec-0277ee269729 1264318030 Scheduled   5/24/2022 3:04:07 PM  Unknown
+a636fa4a-c066-755d-fd8e-dd7f8a9804a4 1264243406

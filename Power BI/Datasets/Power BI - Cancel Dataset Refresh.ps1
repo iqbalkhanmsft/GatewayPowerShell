@@ -9,7 +9,7 @@
 
     $groupId = "c1533552-bcc6-463c-af77-b63f1e418d53"
     $datasetId = "ff77ed8c-2fd4-47c9-9b15-b705da54efb1"
-    $refreshId = "03404ac3-18ae-47da-a085-bd80eddd3870"
+    $refreshId = "1264243406"
 
     #DELETE https://api.powerbi.com/v1.0/myorg/groups/{groupId}/datasets/{datasetId}/refreshes/{refreshId}
     $apiUri = "groups/$groupId/datasets/$datasetId/refreshes/$refreshId"
@@ -24,7 +24,7 @@
 #Execute rest method.
 Invoke-PowerBIRestMethod -Url $apiUri -Method Delete
 
-Write-Output "Refresh `$refreshId for Power BI dataset $datasetId in workspace $groupId deleted..."
+Write-Output "Refresh $refreshId for Power BI dataset $datasetId in workspace $groupId deleted..."
 
 #Run if errors.
 #Resolve-PowerBIError -Last
