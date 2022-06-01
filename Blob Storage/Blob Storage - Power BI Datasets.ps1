@@ -5,37 +5,45 @@
 
     ####### PARAMETERS START #######
 
-    $clientID = "f25b1f83-ef28-4395-aa55-8347fe9e282d" #Aka app ID.
-    $clientSecret = "zuu8Q~DKMUxO~DYrznB6Xx8PInlGmXRFxk9Kyb3p"
+    $clientID = "c6f7cf55-9159-4e40-a0e0-57bd32ec3e41" #Aka app ID.
+    $clientSecret = "-cv8Q~AapvQPuDFLo5E5twpVDm6xIcRkP3cS.bnk"
     $tenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
     #Url for relevant query to run.
     $apiUri = "groups/0be252fd-f744-4d90-b1ce-b06c0a2a5f6b/reports"
 
+    $resourceGroup = "pocs"
+    $storageAccount = "customerpocsstorage"
+    $storageKey = "DSaCoYjnFuoT/jKCt2mkwYP1NXGjm+n9DOuRCO6X7+SUcD2XKKWONRWTQ6i9iXAqVjVzz6BrsnGx+AStjvF7WQ=="
+    $containerName = "ch-colorado"
+
+    $file = "C:\Temp\Power BI - Azure Blob Storage Test.csv"
+
+    $fileSave = "Azure Automation Export.csv"
+
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
-#Uncomment and run if not installed once before.
-#Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+Set-ExecutionPolicy RemoteSigned
 
-#Update module if previously installed and is out of date.
-#Update-Module -Name Az
+Import-Module Az.Accounts
+Import-Module Az.Storage
 
-Import-Module -Name AzureRM.Storage
+#Create credentials object using environment parameters.
+$password = ConvertTo-SecureString $clientSecret -AsPlainText -Force
+$credentials = New-Object PSCredential $clientID, $password
 
-Get-Module -Name Az.Storage | select -ExpandProperty ExportedCommands
-
-#Create credential object using environment parameters.
-$Password = ConvertTo-SecureString $clientSecret -AsPlainText -Force
-$Credential = New-Object PSCredential $clientID, $password
-
-#Connect to Power BI with credentials of Service Principal.
-Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
+#Connect to Power BI with credentialss of Service Principal.
+Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credentials -Tenant $TenantID
 
 #Execute rest method.
 $result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get | ConvertFrom-Json | select -ExpandProperty value
 
-$context = New-AzureStorageContext -StorageAccountName "customerpocsstorage " -StorageAccountKey "BlodtbT2+HdPgECZ8wBSqapbMy1A28SbPjndjYaW64nObYccMXnArIvJpp1T5TLJOzpggwO7+ltq0ILsfEEtEw=="
+$result | Export-Csv $file -NoTypeInformation
 
-$result | Export-Csv $context\ch-colorado\PowerBI-Datasets.csv -NoTypeInformation
+Connect-AzAccount -ServicePrincipal -Tenant $tenantID -Credential $credentials
+
+Get-AzStorageAccount -Name $storageAccount -ResourceGroupName $resourceGroup |
+Get-AzStorageContainer -Name $containerName |
+Set-AzStorageBlobContent -File $file -Blob $fileSave
