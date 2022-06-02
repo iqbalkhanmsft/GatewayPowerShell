@@ -2,10 +2,8 @@
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/datasets-get-datasets-as-admin
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/get-refresh-schedule-in-group
 
-#DESCRIPTION: Extract all datasets via REST API and service principal.
-#Then extracts dataset refresh history for each dataset and appends to a final table. Add Members.
-
-#Notes: Clean up any unneeded code. Annotate. Add back in refresh status column. Check above annotations. Remove test code.
+#DESCRIPTION: Extract all datasets (using the Admin + Groups call) via REST API and service principal.
+#Script then extracts each dataset's refresh schedule and appends all records to a final table.
 
     ###### PARAMETERS START #######
 
@@ -14,7 +12,7 @@
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    #Uri to extract all datasets.
+    #Uri to extract all datasets across all workspaces.
     $ApiUri = "admin/groups?`$top=5000&`$expand=datasets"
 
     ####### PARAMETERS END #######
@@ -35,23 +33,20 @@ Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant 
 #Execute REST API.
 $Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
 
-#Store API response values only.
+#Store API response's value component only.
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
-#Create object to store parsed workspace data to.
+#Create object to store workspace + dataset info to.
 $DatasetList = @()
 
-#For each workspace record, create custom object with underlying dataset info.
-
+#For each dataset in a workspace, create custom object with dataset (+ overarching workspace) info.
 foreach($Item in $ResultValue)
-
 {
-
+    #Since a workspace may have multiple datasets, loop through dataset IDs in the workspace record and create a unique object for each.
     foreach($SecondItem in $Item.Datasets)
-    
     {
 
-        #Create custom object.
+        #Create custom object to store values within.
         $Object = New-Object PSObject
         $Object | Add-Member -MemberType NoteProperty -Name workspaceId ''
         $Object | Add-Member -MemberType NoteProperty -Name workspaceName ''
@@ -81,43 +76,40 @@ foreach($Item in $ResultValue)
 
 }
 
+#Filter datasets to only those that are refreshable.
 $Refreshables = $DatasetList | Where-Object {$_.isRefreshable -eq 'True'}
 
+#Create object to store workspace + dataset (+ refresh schedule) to.
 $RefreshSchedule = @()
 
+#For each dataset in a workspace, create custom object with dataset + workspace (+ refresh schedule) info.
 ForEach($ThirdItem in $Refreshables)
-
     {
+ 
+    #Store dataset values for use in refresh history API below.
+    $workspaceId = $ThirdItem.workspaceId
+    $datasetId = $ThirdItem.datasetId
 
-    $workspaceId = "0be252fd-f744-4d90-b1ce-b06c0a2a5f6b"
-    $datasetId = "bf62c5b7-2049-4ee6-aabe-905fc3e98abd"
-    
-    #$workspaceId = $ThirdItem.workspaceId
-    #$datasetId = $ThirdItem.datasetId
-    $workspaceName = $ThirdItem.workspaceName
-    $workspaceType = $ThirdItem.workspaceType
-    $isOnDedicatedCapacity = $ThirdItem.isOnDedicatedCapacity
-    $datasetName = $ThirdItem.datasetName
-    $datasetConfiguredBy = $ThirdItem.datasetConfiguredBy
-    $datasetCreatedDate = $ThirdItem.datasetCreatedDate
-    $isRefreshable = $ThirdItem.isRefreshable
-
+    #Execute refresh history API for the given dataset in the loop.
     $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshSchedule" -Method Get
 
+    #Conver API response's value component only.
     $RefreshValue = $RefreshResult | ConvertFrom-Json
 
     $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $workspaceId
     $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $datasetId
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $workspaceName
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $workspaceType
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $isOnDedicatedCapacity
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $datasetName
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetConfiguredBy' -Value $datasetConfiguredBy
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetCreatedDate' -Value $datasetCreatedDate
-    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'isRefreshable' -Value $isRefreshable
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $ThirdItem.workspaceName
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $ThirdItem.workspaceType
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $ThirdItem.isOnDedicatedCapacity
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $ThirdItem.datasetName
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetConfiguredBy' -Value $ThirdItem.datasetConfiguredBy
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetCreatedDate' -Value $ThirdItem.datasetCreatedDate
+    $RefreshValue | Add-Member -MemberType NoteProperty -Name 'isRefreshable' -Value $ThirdItem.isRefreshable
 
-    $RefreshSchedule += $RefreshValue
+    #Add object to array.
+    $RefreshSchedule += $RefreshValue | Select-Object -ExcludeProperty '@odata.context'
 
     }
 
-$RefreshSchedule #| ConvertTo-Json | Out-File $FileName
+#Convert array to JSON and store to file.
+$RefreshSchedule | ConvertTo-Json | Out-File $FileName
