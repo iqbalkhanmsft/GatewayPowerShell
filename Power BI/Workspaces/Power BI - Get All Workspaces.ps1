@@ -6,7 +6,7 @@
     ####### PARAMETERS START #######
 
     $ClientID = "f25b1f83-ef28-4395-aa55-8347fe9e282d" #Aka app ID.
-    $ClientSecret = "5An8Q~CcQJOqUZCuUZprB1KLbnZBDjWuNyWZ1b3Q"
+    $ClientSecret = "VSa8Q~eLK11PlUPrroKRc_VCK5NHtORqUvy5CbY8"
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
@@ -29,4 +29,4 @@ Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant 
 $Result = Get-PowerBIWorkspace -Scope Organization
 
 #Format results in tabular format.
-$Result | Export-Csv $FileName
+$Result #| Export-Csv $FileName

@@ -1,7 +1,7 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/powershell/module/microsoftpowerbimgmt.workspaces/get-powerbiworkspacemigrationstatus?view=powerbi-ps
 
-#DESCRIPTION: Extract all workspaces + reports via REST API and service principal.
+#DESCRIPTION: Extract migration status for a given wokrspacel
 
     ####### PARAMETERS START #######
 
@@ -10,17 +10,14 @@
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    $Top = 5000 #Number of workspaces to return; max = 5000.
+    $WorkspaceId = "bcb5641e-cac4-4e19-8bf8-6e71ebce4399"
 
-    #Url for relevant query to run.
-    $ApiUri = "admin/groups?`$top=$Top&`$expand=reports"
-
-    ####### PARAMETERS END #######
+     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Workspaces + Reports (API).json"
+$FileName = $File + "Power BI - All Workspaces.csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
@@ -30,7 +27,8 @@ $Credential = New-Object PSCredential $ClientID, $Password
 #Connect to Power BI with credentials of Service Principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
-$Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
+#Gets migration status for given workspace.
+$Result = Get-PowerBIWorkspaceMigrationStatus -Id $WorkspaceId
 
 #Format results in tabular format.
-$Result | Out-File $FileName
+$Result #| Export-Csv $FileName
