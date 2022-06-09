@@ -2,7 +2,7 @@
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/get-gateways
 
 #DESCRIPTION: Extracts all gateways that the executing user is an admin of.
-#Recommend adding the executing service principal's Azire AD security group to the gateway as an admin.
+#Recommend adding the executing service principal's Azure AD security group as an admin to each gateway, so that all gateways' info are returned.
 
     ####### PARAMETERS START #######
 
@@ -26,7 +26,10 @@ $Credential = New-Object PSCredential $ClientID, $Password
 #Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID -Environment USGov
 
-#Execute gateway API to return all gateways that the user is an admin of.
+#Connect to Power BI with credentials of a Power BI admin.
+#Connect-PowerBIServiceAccount -Environment USGov
+
+#Execute gateway API to return all gateways that the executing user is an admin of.
 $APIResult = Invoke-PowerBIRestMethod -Url "gateways" -Method Get
 
 #Store API response's value component only.
@@ -36,9 +39,10 @@ $APIValue = ($APIResult | ConvertFrom-Json).'value'
 $GatewaysObject = @()
 
 #For each gateway object, parse out underlying gateway info that is currently stored in an array.
+#For each gateway...
 ForEach($GatewayItem in $APIValue) {
 
-    #Create custom object to store values within.
+    #Create a custom object to store values within.
     $Object = New-Object PSObject
     $Object | Add-Member -MemberType NoteProperty -Name gatewayId ''
     $Object | Add-Member -MemberType NoteProperty -Name gatewayName ''
@@ -47,6 +51,7 @@ ForEach($GatewayItem in $APIValue) {
     $Object | Add-Member -MemberType NoteProperty -Name gatewayVersion ''
     $Object | Add-Member -MemberType NoteProperty -Name gatewayMachine ''
 
+    #Store API response values within object.
     $Object.gatewayId = $GatewayItem.id
     $Object.gatewayName = $GatewayItem.name
     $Object.gatewayType = $GatewayItem.type
@@ -54,6 +59,7 @@ ForEach($GatewayItem in $APIValue) {
     $Object.gatewayVersion = ($GatewayItem | select -ExpandProperty gatewayAnnotation | ConvertFrom-Json).gatewayVersion
     $Object.gatewayMachine = ($GatewayItem | select -ExpandProperty gatewayAnnotation | ConvertFrom-Json).gatewayMachine
 
+    #Add object to array.
     $GatewaysObject += $Object
    
 }
