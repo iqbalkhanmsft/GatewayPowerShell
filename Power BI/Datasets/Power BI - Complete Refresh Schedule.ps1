@@ -1,5 +1,5 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/datasets-get-datasets-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/get-refresh-schedule-in-group
 
 #DESCRIPTION: Extract all datasets (using the Admin + Groups call) via REST API and service principal.
@@ -27,7 +27,7 @@ Write-Output "Writing results to $FileName..."
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
 #Execute REST API.
@@ -96,6 +96,7 @@ ForEach($ThirdItem in $Refreshables)
     #Conver API response's value component only.
     $RefreshValue = $RefreshResult | ConvertFrom-Json
 
+    #Add workspace + dataset info to object.
     $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $workspaceId
     $RefreshValue | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $datasetId
     $RefreshValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $ThirdItem.workspaceName

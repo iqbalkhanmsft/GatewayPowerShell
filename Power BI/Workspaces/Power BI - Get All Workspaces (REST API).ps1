@@ -20,14 +20,14 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Workspaces (API).json"
+$FileName = $File + "Power BI - All Workspaces (API).csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID -Environment USGov
 
 #Execute REST API.
@@ -37,4 +37,4 @@ $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
 #Format results in tabular format.
-$ResultValue | Out-File $FileName
+$ResultValue | Export-Csv $FileName

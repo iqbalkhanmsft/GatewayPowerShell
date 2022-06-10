@@ -1,8 +1,8 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/dashboards-get-dashboard-users-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/reports-get-reports-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/reports-get-report-users-as-admin
 
-#DESCRIPTION: Extract all apps and underlying users via REST API and service principal.
+#DESCRIPTION: Extract all reports and underlying users via REST API and service principal.
 
     ####### PARAMETERS START #######
 
@@ -35,16 +35,16 @@ $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 #Store API response's value component only.
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
-#Create object to store app and parsed user info to.
+#Create object to store reports and parsed user info to.
 $ReportsObject = @()
 
-#Since an app may have multiple users, split users out into individual records. #For each app...
+#Since a report may have multiple users, split users out into individual records. #For each report...
 ForEach($Item in $ResultValue) {
 
-    #Store app ID for use in apps API below.
+    #Store report ID for use in reports API below.
     $reportId = $Item.id
 
-    #Execute apps API for the given app ID in the loop.
+    #Execute reports API for the given report ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/reports/$reportId/users" -Method Get
 

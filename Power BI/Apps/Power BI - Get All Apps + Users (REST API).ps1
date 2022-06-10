@@ -1,6 +1,5 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
 
 #DESCRIPTION: Extract all apps and underlying users via REST API and service principal.
 
@@ -45,8 +44,6 @@ ForEach($Item in $ResultValue) {
 
     #Store app ID for use in apps API below.
     $appId = $Item.id
-
-    #$appId = "2838d439-82c1-44af-915d-920567827faf"
 
     #Execute apps API for the given app ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.

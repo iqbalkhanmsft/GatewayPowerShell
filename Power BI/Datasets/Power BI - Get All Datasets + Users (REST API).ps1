@@ -1,8 +1,8 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/dashboards-get-dashboard-users-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/datasets-get-datasets-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/datasets-get-dataset-users-as-admin
 
-#DESCRIPTION: Extract all apps and underlying users via REST API and service principal.
+#DESCRIPTION: Extract all datasets and underlying users via REST API and service principal.
 
     ####### PARAMETERS START #######
 
@@ -35,23 +35,23 @@ $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 #Store API response's value component only.
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
-#Create object to store app and parsed user info to.
+#Create object to store dataset and parsed user info to.
 $DatasetsObject = @()
 
-#Since an app may have multiple users, split users out into individual records. #For each app...
+#Since a dataset may have multiple users, split users out into individual records. #For each dataset...
 ForEach($Item in $ResultValue) {
 
-    #Store app ID for use in apps API below.
+    #Store dataset ID for use in datasets API below.
     $datasetId = $Item.id
 
-    #Execute apps API for the given app ID in the loop.
+    #Execute dataset API for the given dataset ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/users" -Method Get
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
 
-    #Add app info to API response.
+    #Add dataset info to API response.
     $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $Item.id
     $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $Item.name
     $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetUrl' -Value $Item.webUrl

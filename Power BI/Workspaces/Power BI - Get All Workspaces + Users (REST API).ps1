@@ -1,8 +1,8 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/dashboards-get-dashboard-users-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-group-users-as-admin
 
-#DESCRIPTION: Extract all apps and underlying users via REST API and service principal.
+#DESCRIPTION: Extract all workspaces and underlying users via REST API and service principal.
 
     ####### PARAMETERS START #######
 
@@ -15,6 +15,7 @@
 
     #Url for relevant query to run.
     $ApiUri = "admin/groups?`$top=$Top"
+
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
@@ -36,23 +37,24 @@ $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 #Store API response's value component only.
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
-#Create object to store app and parsed user info to.
+#Create object to store workspace and parsed user info to.
 $WorkspacesObject = @()
 
-#Since an app may have multiple users, split users out into individual records. #For each app...
+#Since a workspace may have multiple users, split users out into individual records.
+#For each workspace...
 ForEach($Item in $ResultValue) {
 
-    #Store app ID for use in apps API below.
+    #Store workspace ID for use in workspace API below.
     $workspaceId = $Item.id
 
-    #Execute apps API for the given app ID in the loop.
+    #Execute workspace API for the given workspace ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/groups/$workspaceId/users" -Method Get
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
 
-    #Add app info to API response.
+    #Add workspace info to API response.
     $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $Item.id
     $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $Item.isOnDedicatedCapacity
     $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $Item.type

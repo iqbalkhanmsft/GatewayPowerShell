@@ -1,5 +1,5 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/datasets-get-datasets-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/get-refresh-history-in-group
 
 #DESCRIPTION: Extract all datasets (using the Admin + Groups call) via REST API and service principal.
@@ -20,14 +20,14 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - Refresh History for All Datasets.json"
+$FileName = $File + "Power BI - Refresh History for All Datasets.csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
 #Execute REST API.
@@ -42,7 +42,7 @@ $DatasetList = @()
 #For each dataset in a workspace, create custom object with dataset (+ overarching workspace) info.
 foreach($Item in $ResultValue)
 {
-    #Since a workspace may have multiple datasets, loop through dataset IDs in the workspace record and create a unique object for each.
+    #Since a workspace may have multiple datasets, loop through dataset IDs in the workspace and create a unique object for each.
     foreach($SecondItem in $Item.Datasets)
     {
 
@@ -114,5 +114,5 @@ ForEach($ThirdItem in $Refreshables)
 
 }
 
-#Convert array to JSON and store to file.
-$RefreshHistory | ConvertTo-Json | Out-File $FileName
+#Convert array to CSV and store to file.
+$RefreshHistory | Export-Csv $FileName

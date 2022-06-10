@@ -27,7 +27,7 @@ Write-Output "Writing results to $FileName..."
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID -Environment USGov
 
 #Execute REST API.
@@ -39,14 +39,14 @@ $APIValue = ($Result | ConvertFrom-Json).'value'
 #Filter results to only those workspaces with dashboards.
 $Filtered = $APIValue | Where-Object {$_.dashboards -ne $null}
 
-#Create object to store workspace + dataset (+ data source / gateway info) to.
+#Create object to store workspace + parsed dashboard data to to.
 $DashboardsObject = @()
 
-#For each dataset in a workspace, create a custom object with dataset + workspace (+ data source / gateway) info.
-#For each dataset...
+#Since a workspace may have multiple dashboards, create an individual object for each dashboard.
+#For each workspace...
 ForEach($Item in $Filtered) {
 
-    #And for each dataset...
+    #And for each dashboard...
     ForEach($SecondItem in $Item.Dashboards) {
 
     #Create a custom object to store values within.
@@ -56,21 +56,19 @@ ForEach($Item in $Filtered) {
     $Object | Add-Member -MemberType NoteProperty -Name workspaceType ''
     $Object | Add-Member -MemberType NoteProperty -Name workspaceState ''
     $Object | Add-Member -MemberType NoteProperty -Name isOnDedicatedCapacity ''
-
     $Object | Add-Member -MemberType NoteProperty -Name dashboardId ''
     $Object | Add-Member -MemberType NoteProperty -Name dashboardName ''
 
-    #Store values from workspace and underlying dataset.
+    #Store values from workspace and underlying dashboard.
     $Object.workspaceId = $Item.id
     $Object.workspaceName = $Item.name
     $Object.workspaceType = $Item.type
     $Object.workspaceState = $Item.state
     $Object.isOnDedicatedCapacity = $Item.isOnDedicatedCapacity
-
     $Object.dashboardId = $SecondItem.id
     $Object.dashboardName = $SecondItem.displayName
     
-    #Only return refreshable datasets.
+    #Only return refreshable dashboard.
     $DashboardsObject +=$Object
 
     }
