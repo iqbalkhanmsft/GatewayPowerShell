@@ -19,10 +19,10 @@
     $subscription = "f29abab0-37b7-4f91-831b-d02d5cd80d7b"
 
     #Temporary file to save.
-    $file = "C:\Temp\Power BI - Azure Blob Storage Test.csv"
+    $file = "C:\Temp\" #Change based on where the file should be saved.
 
     #End result file to save in Blob Storage.
-    $fileSave = "Azure Automation Export.csv"
+    $fileSave = "Azure Blob Storage Final.csv"
 
     ####### PARAMETERS END #######
 

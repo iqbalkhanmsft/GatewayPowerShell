@@ -6,9 +6,9 @@
 
     ####### PARAMETERS START #######
 
-    $ClientID = "53401d7d-b450-4f49-a888-0e0f1fabc1cf" #Aka app ID.
-    $ClientSecret = "dih8Q~J.MvNuTB5PLUwuYcJOFzQuLmhMKOemZdkE"
-    $TenantID = "96751c9d-db78-47f2-adff-d5876f878839"
+    $ClientID = "f25b1f83-ef28-4395-aa55-8347fe9e282d" #Aka app ID.
+    $ClientSecret = "Du28Q~qcQ7RUMJKzBDzVpaupwvyewQv6LX5Vbc1B"
+    $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
     $Top = 5000 #Number of workspaces to return; max = 5000.
@@ -28,7 +28,7 @@ $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
 #Connect to Power BI with credentials of service principal.
-Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID -Environment USGov
+Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
 
 #Execute REST API.
 $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
@@ -43,9 +43,7 @@ $WorkspacesObject = @()
 ForEach($Item in $ResultValue) {
 
     #Store app ID for use in apps API below.
-    #$workspaceId = $Item.id
-
-    $workspaceId = "bfde4823-a459-4a59-871c-788ed1f52fe5"
+    $workspaceId = $Item.id
 
     #Execute apps API for the given app ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
