@@ -45,7 +45,7 @@ Import-Module Az.Storage #-NoClobber
 $password = ConvertTo-SecureString $clientSecret -AsPlainText -Force
 $credentials = New-Object PSCredential $clientID, $password
 
-#Connect to Power BI with credentialss of Service Principal.
+#Connect to Power BI with credentials of service principal.
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credentials -Tenant $TenantID
 
 #Execute rest method.
@@ -54,7 +54,7 @@ $result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get | ConvertFrom-Json |
 #Store API results to file.
 $result | Export-Csv $file -NoTypeInformation
 
-#Connect to Az account using Service Principal.
+#Connect to Az account using service principal.
 Connect-AzAccount -ServicePrincipal -Tenant $tenantID -Credential $credentials -Subscription $Subscription
 
 #Connect to Az account using manual authentication.
