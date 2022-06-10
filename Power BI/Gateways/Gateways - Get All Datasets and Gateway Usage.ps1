@@ -91,7 +91,7 @@ ForEach($ThirdItem in $WorkspacesObject)
     #Store dataset ID for use in data source / gateway API below.
     $datasetId = $ThirdItem.datasetId
 
-    #Execute data source / gateway API API for the given dataset in the loop.
+    #Execute data source / gateway API for the given dataset in the loop.
     #API returns each underlying data source as an individual record so no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/datasources" -Method Get
 

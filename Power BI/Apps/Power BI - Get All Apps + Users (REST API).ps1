@@ -1,6 +1,6 @@
 #DISCLAIMER: Scripts should go through the proper testing and validation before being run in production.
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
-#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/dashboards-get-dashboard-users-as-admin
+#DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/apps-get-apps-as-admin
 
 #DESCRIPTION: Extract all apps and underlying users via REST API and service principal.
 
@@ -11,16 +11,17 @@
     $TenantID = "96751c9d-db78-47f2-adff-d5876f878839"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    $Top = 5000 #Number of workspaces to return; max = 5000.
+    $Top = 5000 #Max number of apps that can be extracted in a single batch based on API limitations.
 
     #Url for relevant query to run.
-    $ApiUri = "admin/groups?`$top=$Top"
+    $ApiUri = "admin/apps?`$top=$Top"
+
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Workspaces + Users (API).csv"
+$FileName = $File + "Power BI - All Apps + Users (API).csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
@@ -37,34 +38,35 @@ $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
 #Create object to store app and parsed user info to.
-$WorkspacesObject = @()
+$AppsObject = @()
 
 #Since an app may have multiple users, split users out into individual records. #For each app...
 ForEach($Item in $ResultValue) {
 
     #Store app ID for use in apps API below.
-    #$workspaceId = $Item.id
+    $appId = $Item.id
 
-    $workspaceId = "bfde4823-a459-4a59-871c-788ed1f52fe5"
+    #$appId = "2838d439-82c1-44af-915d-920567827faf"
 
     #Execute apps API for the given app ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/groups/$workspaceId/users" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/apps/$appId/users" -Method Get
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
 
     #Add app info to API response.
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $Item.id
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $Item.isOnDedicatedCapacity
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $Item.type
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceState' -Value $Item.state
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $Item.name
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'appId' -Value $Item.id
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'appName' -Value $Item.name
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'appLastUpdated' -Value $Item.lastUpdate
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'appDescription' -Value $Item.description
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'appPublishedBy' -Value $Item.publishedBy
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $Item.workspaceId
 
     #Add object to array.
-    $WorkspacesObject += $APIValue
+    $AppsObject += $APIValue
 
 }
 
 #Format results in tabular format.
-$WorkspacesObject | Export-Csv $FileName
+$AppsObject | Export-Csv $FileName

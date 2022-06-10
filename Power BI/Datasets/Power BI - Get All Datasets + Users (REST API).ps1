@@ -11,16 +11,15 @@
     $TenantID = "96751c9d-db78-47f2-adff-d5876f878839"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    $Top = 5000 #Number of workspaces to return; max = 5000.
-
     #Url for relevant query to run.
-    $ApiUri = "admin/groups?`$top=$Top"
+    $ApiUri = "admin/datasets"
+
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Workspaces + Users (API).csv"
+$FileName = $File + "Power BI - All Datasets + Users (API).csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
@@ -37,34 +36,35 @@ $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 $ResultValue = ($Result | ConvertFrom-Json).'value'
 
 #Create object to store app and parsed user info to.
-$WorkspacesObject = @()
+$DatasetsObject = @()
 
 #Since an app may have multiple users, split users out into individual records. #For each app...
 ForEach($Item in $ResultValue) {
 
     #Store app ID for use in apps API below.
-    #$workspaceId = $Item.id
+    $datasetId = $Item.id
 
-    $workspaceId = "bfde4823-a459-4a59-871c-788ed1f52fe5"
+    $datasetId = "be0058d7-c6ce-4449-ae68-2d6ecb9661c7"
 
     #Execute apps API for the given app ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/groups/$workspaceId/users" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/users" -Method Get
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
 
     #Add app info to API response.
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $Item.id
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $Item.isOnDedicatedCapacity
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $Item.type
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceState' -Value $Item.state
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $Item.name
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $Item.id
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $Item.name
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetUrl' -Value $Item.webUrl
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetConfiguredBy' -Value $Item.configuredBy
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'isRefreshable' -Value $Item.isRefreshable
+    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetCreatedDate' -Value $Item.createdDate
 
     #Add object to array.
-    $WorkspacesObject += $APIValue
+    $DatasetsObject += $APIValue
 
 }
 
 #Format results in tabular format.
-$WorkspacesObject | Export-Csv $FileName
+$DatasetsObject | Export-Csv $FileName

@@ -33,13 +33,13 @@
 #Update-Module Az
 
 #Remove all modules from session.
-#Get-Module | Remove-Module
+Get-Module | Remove-Module -Force
 
 #Import Az accounts module.
-Import-Module Az.Accounts
+Import-Module Az.Accounts #-NoClobber
 
 #Import Az storage module.
-Import-Module Az.Storage
+Import-Module Az.Storage #-NoClobber
 
 #Create credentials object using environment parameters.
 $password = ConvertTo-SecureString $clientSecret -AsPlainText -Force

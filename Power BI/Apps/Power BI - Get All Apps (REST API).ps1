@@ -5,12 +5,12 @@
 
     ####### PARAMETERS START #######
 
-    $ClientID = "f25b1f83-ef28-4395-aa55-8347fe9e282d" #Aka app ID.
-    $ClientSecret = "kTg8Q~279iNcrmu9BndMf2o-gV4LIZUEVCPjPdyn"
-    $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
+    $ClientID = "53401d7d-b450-4f49-a888-0e0f1fabc1cf" #Aka app ID.
+    $ClientSecret = "dih8Q~J.MvNuTB5PLUwuYcJOFzQuLmhMKOemZdkE"
+    $TenantID = "96751c9d-db78-47f2-adff-d5876f878839"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
-    $Top = 5000
+    $Top = 5000 #Max number of apps that can be extracted in a single batch based on API limitations.
 
     #Url for relevant query to run.
     $ApiUri = "admin/apps?`$top=$Top"
@@ -20,17 +20,21 @@
 ####### BEGIN SCRIPT #######
 
 #Setup file name for saving.
-$FileName = $File + "Power BI - All Apps (API).json"
+$FileName = $File + "Power BI - All Apps (API).csv"
 Write-Output "Writing results to $FileName..."
 
 #Create credential object using environment parameters.
 $Password = ConvertTo-SecureString $ClientSecret -AsPlainText -Force
 $Credential = New-Object PSCredential $ClientID, $Password
 
-#Connect to Power BI with credentials of Service Principal.
-Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID
+#Connect to Power BI with credentials of service principal.
+Connect-PowerBIServiceAccount -ServicePrincipal -Credential $Credential -Tenant $TenantID -Environment USGov
 
+#Execute REST API.
 $Result = Invoke-PowerBIRestMethod -Url $apiUri -Method Get
 
+#Store API response's value component only.
+$APIValue = ($Result | ConvertFrom-Json).'value'
+
 #Format results in tabular format.
-$Result | Out-File $FileName
+$APIValue | Select-Object * -ExcludeProperty users | Export-Csv $FileName
