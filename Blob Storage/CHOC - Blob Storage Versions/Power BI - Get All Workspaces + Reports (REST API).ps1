@@ -12,13 +12,7 @@
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
     #Url for relevant query to run.
-    #$ApiUri = '/admin/groups?$top=5000&' + '$skip=' + $Skip + '&$filter=state eq' + " 'Active'"
-
-    #Url for relevant query to run.
     $ApiUri = '/admin/groups?$top=5000&' + '$expand=reports&'+ '$filter=state eq' + " 'Active'"
-
-    #Url for relevant query to run.
-    #$ApiUri = "admin/groups?`$top=$Top&`$expand=reports"
 
     #File name for temporary staging file.
     $File = "Workspaces + Reports Staging.csv" 
