@@ -11,10 +11,11 @@
     $ClientSecret = "VSa8Q~eLK11PlUPrroKRc_VCK5NHtORqUvy5CbY8"
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
-    $Top = 5000 #Number of workspaces to return; max = 5000.
+    #Url for relevant query to run.
+    #$ApiUri = "admin/groups?`$top=$Top&`$expand=datasets"
 
     #Url for relevant query to run.
-    $ApiUri = "admin/groups?`$top=$Top&`$expand=datasets"
+    $ApiUri = '/admin/groups?$top=5000&' + '$expand=datasets&'+ '$filter=state eq' + " 'Active'"
 
     #File name for temporary staging file.
     $File = "Workspaces + Datasets Staging.csv" 

@@ -10,7 +10,7 @@
     ####### PARAMETERS START #######
 
     $ClientID = "53401d7d-b450-4f49-a888-0e0f1fabc1cf" #Aka app ID.
-    $ClientSecret = "dih8Q~J.MvNuTB5PLUwuYcJOFzQuLmhMKOemZdkE"
+    $ClientSecret = "Oem8Q~Vr8ebpcuiFwilfjeSPCMoNqhDtaoIYxbfS"
     $TenantID = "96751c9d-db78-47f2-adff-d5876f878839"
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
@@ -82,6 +82,12 @@ ForEach($Item in $Workspaces) {
 #Create object to store workspace + dataset (+ data source / gateway info) to.
 $GatewayObject = @()
 
+#Create object to store inaccessible datasets for later review.
+$ErrorOutput = @()
+
+#Setup error file name for saving.
+$ErrorFileName = $File + "Power BI - All Gateway Data Sources (Error Output).json"
+
 #For each dataset in a workspace, create a custom object with dataset + workspace (+ data source / gateway) info.
 #For each dataset...
 ForEach($ThirdItem in $WorkspacesObject)
@@ -93,28 +99,61 @@ ForEach($ThirdItem in $WorkspacesObject)
 
     #Execute data source / gateway API for the given dataset in the loop.
     #API returns each underlying data source as an individual record so no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/datasources" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/datasources" -Method Get -ErrorVariable ProcessError
 
-    #Store API response's value component only.
-    $APIValue = ($APIResult | ConvertFrom-Json).'value'
+    #Catch + try for inaccessible datasets.
+    If($ProcessError){
 
-    #Add workspace + dataset info to API response.
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $ThirdItem.workspaceId
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $ThirdItem.workspaceName
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $ThirdItem.workspaceType
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceState' -Value $ThirdItem.workspaceState
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $ThirdItem.isOnDedicatedCapacity
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'capacityId' -Value $ThirdItem.capacityId
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $ThirdItem.datasetId
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $ThirdItem.datasetName
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetConfiguredBy' -Value $ThirdItem.datasetConfiguredBy
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'isRefreshable' -Value $ThirdItem.isRefreshable
-    $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnPremGatewayRequired' -Value $ThirdItem.isOnPremGatewayRequired
+        #Warning if dataset cannot be accessed...
+        Write-Warning "Dataset $DatasetId could not be found... Moving to next dataset."
 
-    #Add object to array.
-    $GatewayObject += $APIValue
+        #Create PS object to store error messages to.
+        $ErrorRecord = New-Object psobject
+
+        #Add useful dataset info to object.
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $datasetId
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $ThirdItem.workspaceId
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $ThirdItem.workspaceName
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'workspaceState' -Value $ThirdItem.workspaceState
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $ThirdItem.workspaceType
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $ThirdItem.isOnDedicatedCapacity
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $ThirdItem.datasetName
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'datasetConfiguredBy' -Value $ThirdItem.datasetConfiguredBy
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'isRefreshable' -Value $ThirdItem.isRefreshable
+        $ErrorRecord | Add-Member -MemberType NoteProperty -Name 'errorMessage' -Value $ProcessError
+
+        #Add record to array.
+        $ErrorOutput += $ErrorRecord 
+
+    }
+
+    Else{
+
+        #Store API response's value component only.
+        $APIValue = ($APIResult | ConvertFrom-Json).'value'
+
+        #Add workspace + dataset info to API response.
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceId' -Value $ThirdItem.workspaceId
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceName' -Value $ThirdItem.workspaceName
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceType' -Value $ThirdItem.workspaceType
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'workspaceState' -Value $ThirdItem.workspaceState
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnDedicatedCapacity' -Value $ThirdItem.isOnDedicatedCapacity
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'capacityId' -Value $ThirdItem.capacityId
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetId' -Value $ThirdItem.datasetId
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetName' -Value $ThirdItem.datasetName
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'datasetConfiguredBy' -Value $ThirdItem.datasetConfiguredBy
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'isRefreshable' -Value $ThirdItem.isRefreshable
+        $APIValue | Add-Member -MemberType NoteProperty -Name 'isOnPremGatewayRequired' -Value $ThirdItem.isOnPremGatewayRequired
+
+        #Add object to array.
+        $GatewayObject += $APIValue
+
+    }
 
 }
 
-#Export to file.
+#Export results to file.
 $GatewayObject | ConvertTo-Json | Out-File $FileName
+
+#Export errors file.
+$ErrorOutput | ConvertTo-Json | Out-File $ErrorFileName

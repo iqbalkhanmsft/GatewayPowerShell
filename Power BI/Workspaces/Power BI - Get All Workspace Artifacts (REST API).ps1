@@ -12,7 +12,6 @@
     $File = "C:\Temp\" #Change based on where the file should be saved.
 
     #Url for relevant query to run.
-
     $ApiUri = "admin/groups?$top=5000&$skip=5000&$expand=users,reports,dashboards,datasets"
 
     ####### PARAMETERS END #######
