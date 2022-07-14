@@ -12,8 +12,11 @@
     $ClientSecret = "T.h8Q~8uuA5i4kapZGIS4Nzd1e2UqTnnDF8_sasj"
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
-    #Url for relevant query to run.
-    $ApiUri = '/admin/groups?$top=5000&' + '$filter=state eq' + " 'Active'"
+    #Uri for relevant query to run.
+    #$ApiUri = '/admin/groups?$top=5000&' + '$filter=state eq' + " 'Active'"
+
+    #Uri for active, group workspaces only.
+    $ApiUri = '/admin/groups?$top=5000&' + '$filter=state eq' + " 'Active'" + ' and type eq' + " 'Workspace'"
 
     #File name for temporary staging file.
     $File = "Workspaces + Users Staging.csv" 
@@ -32,6 +35,9 @@
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
+
+#Disable autosave of service principal secret.
+Disable-AzContextAutosave -Scope Process
 
 #Remove all modules from session.
 Get-Module | Remove-Module -Force

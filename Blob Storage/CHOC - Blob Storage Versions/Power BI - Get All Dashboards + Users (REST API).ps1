@@ -9,7 +9,7 @@
     #Start parameters here.
 
     $ClientID = "f25b1f83-ef28-4395-aa55-8347fe9e282d" #Aka app ID.
-    $ClientSecret = "VSa8Q~eLK11PlUPrroKRc_VCK5NHtORqUvy5CbY8"
+    $ClientSecret = "T.h8Q~8uuA5i4kapZGIS4Nzd1e2UqTnnDF8_sasj"
     $TenantID = "84fb42a1-8f75-4c94-9ea6-0124b5a276c5"
 
     #Url for relevant query to run.
@@ -32,6 +32,9 @@
     ####### PARAMETERS END #######
 
 ####### BEGIN SCRIPT #######
+
+#Disable autosave of service principal secret.
+Disable-AzContextAutosave -Scope Process
 
 #Remove all modules from session.
 Get-Module | Remove-Module -Force
