@@ -2,7 +2,7 @@
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-groups-as-admin
 #DOCUMENTATION: https://docs.microsoft.com/en-us/rest/api/power-bi/admin/groups-get-group-users-as-admin
 
-#DESCRIPTION: Extract all active workspaces and underlying users via REST API and service principal or PBI admin credentials.
+#DESCRIPTION: Extract all active workspaces and underlying users via REST API.
 
     ####### PARAMETERS START #######
 
@@ -68,7 +68,7 @@ $ResultValue = @()
     $ApiUri = '/admin/groups?$top=5000&' + '$skip=' + $Skip + '&$filter=state eq' + " 'Active'"
 
     #Execute REST API.
-    $Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get
+    $Result = Invoke-PowerBIRestMethod -Url $ApiUri -Method Get -ErrorAction SilentlyContinue
 
     #Store API response's value component only.
     $Value = ($Result | ConvertFrom-Json).'value'
@@ -92,7 +92,7 @@ ForEach($Item in $ResultValue) {
 
     #Execute workspace + users API for the given workspace ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/groups/$workspaceId/users" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/groups/$workspaceId/users" -Method Get -ErrorAction SilentlyContinue
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'

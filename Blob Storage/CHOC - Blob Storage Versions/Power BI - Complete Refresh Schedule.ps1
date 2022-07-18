@@ -119,7 +119,7 @@ ForEach($ThirdItem in $Refreshables)
     $datasetId = $ThirdItem.datasetId
 
     #Execute refresh history API for the given dataset in the loop.
-    $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshSchedule" -Method Get -ErrorVariable ProcessError -ErrorAction SilentlyContinue
+    $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshSchedule" -Method Get
 
     #Conver API response's value component only.
     $RefreshValue = $RefreshResult | ConvertFrom-Json

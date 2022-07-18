@@ -72,7 +72,8 @@ ForEach($Item in $ResultValue) {
 
     #Execute apps API for the given app ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/apps/$appId/users" -Method Get
+    #TimeoutSec parameter added due to task cancellation error.
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/apps/$appId/users" -Method Get -TimeoutSec 0 -ErrorAction SilentlyContinue
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
