@@ -77,12 +77,14 @@ ForEach($Item in $ResultValue) {
     #API returns each underlying user as an individual record so that no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/apps/$appId/users" -Method Get -ErrorAction SilentlyContinue -ErrorVariable ProcessError
 
+    #If API returned an error, skip writing values to object.
     If($ProcessError){
 
         Write-Output "App $appId could not be found... skipping to next report."
 
     }
 
+    #If API did not return an error, write values to object.
     Else{
 
     #Store API response's value component only.
@@ -98,6 +100,10 @@ ForEach($Item in $ResultValue) {
 
     #Add object to array.
     $AppsObject += $APIValue
+
+    #Add pause to loop to reduce risk of 429 - Too Many Requests issue.
+    #API limit is 200 requests per hour, which would be 1 request every 18 seconds. Increasing to 20 seconds to be safe.
+    Start-Sleep -Seconds 20
 
     }
 

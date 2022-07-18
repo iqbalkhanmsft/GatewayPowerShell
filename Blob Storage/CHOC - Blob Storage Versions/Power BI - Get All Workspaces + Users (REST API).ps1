@@ -90,6 +90,10 @@ ForEach($Item in $ResultValue) {
     #Add object to array.
     $WorkspacesObject += $APIValue
 
+    #Add pause to loop to reduce risk of 429 - Too Many Requests issue.
+    #API limit is 200 requests per hour, which would be 1 request every 18 seconds. Increasing to 20 seconds to be safe.
+    Start-Sleep -Seconds 20
+
 }
 
 #Format results in tabular format.

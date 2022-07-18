@@ -76,12 +76,14 @@ ForEach($Item in $ResultValue) {
     #API returns each underlying user as an individual record so that no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/users" -Method Get -ErrorAction SilentlyContinue -ErrorVariable ProcessError
 
+    #If API returned an error, skip writing values to object.
     If($ProcessError){
 
         Write-Output "Dataset $datasetId could not be found... skipping to next dataset."
 
     }
 
+    #If API did not return an error, write values to object.
     Else{
 
     #Store API response's value component only.

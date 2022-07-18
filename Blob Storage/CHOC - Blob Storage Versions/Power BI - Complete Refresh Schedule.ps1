@@ -68,10 +68,10 @@ $ResultValue = ($Result | ConvertFrom-Json).'value'
 $DatasetList = @()
 
 #For each dataset in a workspace, create custom object with dataset (+ overarching workspace) info.
-foreach($Item in $ResultValue)
+ForEach($Item in $ResultValue)
 {
     #Since a workspace may have multiple datasets, loop through dataset IDs in the workspace record and create a unique object for each.
-    foreach($SecondItem in $Item.Datasets)
+    ForEach($SecondItem in $Item.Datasets)
     {
 
         #Create custom object to store values within.
@@ -118,17 +118,20 @@ ForEach($ThirdItem in $Refreshables)
     $workspaceId = $ThirdItem.workspaceId
     $datasetId = $ThirdItem.datasetId
 
+    #Delete ProcessError variable if exists from the previous loop execution.
     Remove-Variable ProcessError -ErrorAction SilentlyContinue
 
     #Execute refresh history API for the given dataset in the loop.
     $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshSchedule" -Method Get -ErrorVariable ProcessError -ErrorAction SilentlyContinue
 
+    #If API returned an error, skip writing values to object.
     If($ProcessError){
 
         Write-Output "Dataset $datasetId could not be found... skipping to next dataset."
 
     }
 
+    #If API did not return an error, write values to object.
     Else{
 
     #Store API response's value component only.
