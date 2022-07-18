@@ -97,6 +97,9 @@ ForEach($ThirdItem in $WorkspacesObject)
     #Store dataset ID for use in data source / gateway API below.
     $datasetId = $ThirdItem.datasetId
 
+    #Delete ProcessError variable if exists from the previous loop execution.
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
+
     #Execute data source / gateway API for the given dataset in the loop.
     #API returns each underlying data source as an individual record so no parsing is required.
     $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/datasources" -Method Get -ErrorVariable ProcessError

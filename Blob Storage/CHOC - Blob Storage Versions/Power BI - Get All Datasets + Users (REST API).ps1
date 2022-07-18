@@ -69,9 +69,20 @@ ForEach($Item in $ResultValue) {
     #Store dataset ID for use in datasets API below.
     $datasetId = $Item.id
 
+    #Delete ProcessError variable if exists from the previous loop execution.
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
+
     #Execute dataset API for the given dataset ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/users" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/datasets/$datasetId/users" -Method Get -ErrorAction SilentlyContinue -ErrorVariable ProcessError
+
+    If($ProcessError){
+
+        Write-Output "Dataset $datasetId could not be found... skipping to next dataset."
+
+    }
+
+    Else{
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
@@ -90,6 +101,8 @@ ForEach($Item in $ResultValue) {
     #Add pause to loop to reduce risk of 429 - Too Many Requests issue.
     #API limit is 200 requests per hour, which would be 1 request every 18 seconds. Increasing to 20 seconds to be safe.
     Start-Sleep -Seconds 20
+
+    }
 
 }
 

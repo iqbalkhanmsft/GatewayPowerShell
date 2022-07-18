@@ -69,9 +69,20 @@ ForEach($Item in $ResultValue) {
     #Store report ID for use in reports API below.
     $reportId = $Item.id
 
+    #Delete ProcessError variable if exists from the previous loop execution.
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
+
     #Execute reports API for the given report ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/reports/$reportId/users" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/reports/$reportId/users" -Method Get -ErrorVariable ProcessError -ErrorAction SilentlyContinue
+
+    If($ProcessError){
+
+        Write-Output "Report $reportId could not be found... skipping to next report."
+
+    }
+
+    Else{
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
@@ -89,6 +100,8 @@ ForEach($Item in $ResultValue) {
 
     #Add object to array.
     $ReportsObject += $APIValue
+
+    }
 
 }
 

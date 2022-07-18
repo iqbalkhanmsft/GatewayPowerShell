@@ -118,10 +118,20 @@ ForEach($ThirdItem in $Refreshables)
     $workspaceId = $ThirdItem.workspaceId
     $datasetId = $ThirdItem.datasetId
 
-    #Execute refresh history API for the given dataset in the loop.
-    $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshSchedule" -Method Get
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
 
-    #Conver API response's value component only.
+    #Execute refresh history API for the given dataset in the loop.
+    $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshSchedule" -Method Get -ErrorVariable ProcessError -ErrorAction SilentlyContinue
+
+    If($ProcessError){
+
+        Write-Output "Dataset $datasetId could not be found... skipping to next dataset."
+
+    }
+
+    Else{
+
+    #Store API response's value component only.
     $RefreshValue = $RefreshResult | ConvertFrom-Json
 
     #Add workspace + dataset info to object.
@@ -139,6 +149,8 @@ ForEach($ThirdItem in $Refreshables)
     $RefreshSchedule += $RefreshValue | Select-Object -ExcludeProperty '@odata.context'
 
     }
+
+}
 
 #Convert array to JSON and store to file.
 $RefreshSchedule | ConvertTo-Json | Out-File $File

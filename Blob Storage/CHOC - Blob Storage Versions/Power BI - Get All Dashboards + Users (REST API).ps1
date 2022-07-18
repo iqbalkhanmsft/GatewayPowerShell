@@ -69,9 +69,20 @@ ForEach($Item in $ResultValue) {
     #Store dashboard ID for use in dashboard API below.
     $dashboardId = $Item.id
 
+    #Delete ProcessError variable if exists from the previous loop execution.
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
+
     #Execute dashboard API for the given dashboard ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/dashboards/$dashboardId/users" -Method Get
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/dashboards/$dashboardId/users" -Method Get -ErrorAction SilentlyContinue -ErrorVariable ProcessError
+
+    If($ProcessError){
+
+        Write-Output "Dashboard $dashboardId could not be found... skipping to next dashboard."
+
+    }
+
+    Else{
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
@@ -82,6 +93,8 @@ ForEach($Item in $ResultValue) {
 
     #Add object to array.
     $DashboardsObject += $APIValue
+
+    }
 
 }
 

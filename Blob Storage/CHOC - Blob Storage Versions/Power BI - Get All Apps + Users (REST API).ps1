@@ -70,10 +70,20 @@ ForEach($Item in $ResultValue) {
     #Store app ID for use in apps API below.
     $appId = $Item.id
 
+    #Delete ProcessError variable if exists from the previous loop execution.
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
+
     #Execute apps API for the given app ID in the loop.
     #API returns each underlying user as an individual record so that no parsing is required.
-    #TimeoutSec parameter added due to task cancellation error.
-    $APIResult = Invoke-PowerBIRestMethod -Url "admin/apps/$appId/users" -Method Get -TimeoutSec 0 -ErrorAction SilentlyContinue
+    $APIResult = Invoke-PowerBIRestMethod -Url "admin/apps/$appId/users" -Method Get -ErrorAction SilentlyContinue -ErrorVariable ProcessError
+
+    If($ProcessError){
+
+        Write-Output "App $appId could not be found... skipping to next report."
+
+    }
+
+    Else{
 
     #Store API response's value component only.
     $APIValue = ($APIResult | ConvertFrom-Json).'value'
@@ -88,6 +98,8 @@ ForEach($Item in $ResultValue) {
 
     #Add object to array.
     $AppsObject += $APIValue
+
+    }
 
 }
 

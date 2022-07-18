@@ -118,8 +118,18 @@ ForEach($ThirdItem in $Refreshables)
     $workspaceId = $ThirdItem.workspaceId
     $datasetId = $ThirdItem.datasetId
 
+    Remove-Variable ProcessError -ErrorAction SilentlyContinue
+
     #Execute refresh history API for the given dataset in the loop.
-    $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshes" -Method Get
+    $RefreshResult = Invoke-PowerBIRestMethod -Url "groups/$workspaceId/datasets/$datasetId/refreshes" -Method Get -ErrorVariable ProcessError -ErrorAction SilentlyContinue
+
+    If($ProcessError){
+
+        Write-Output "Dataset $datasetId could not be found... skipping to next dataset."
+
+    }
+
+    Else{
 
     #Store API response's value component only.
     $RefreshValue = ($RefreshResult | ConvertFrom-Json).'value'
@@ -139,6 +149,8 @@ ForEach($ThirdItem in $Refreshables)
 
     #Add object to array. Remove other id value for refresh.
     $RefreshHistory += $NullsRemoved | Select-Object -ExcludeProperty id
+
+    }
 
 }
 
